@@ -2,6 +2,8 @@ from django.db import models
 
 class Fornecedor(models.Model):
     nome_fornecedor = models.CharField(max_length=150)
+    contato =  models.CharField(max_length=150, default='')
+    descricao = models.CharField(max_length=190,default='', null=True, blank=True)
     
     def __str__(self):
         return self.nome_fornecedor

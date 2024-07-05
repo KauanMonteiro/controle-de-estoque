@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from .models import Fornecedor, Produto
 
 def home(request):
@@ -28,7 +28,19 @@ def cadastrar_produto(request):
 
 
 def cadastro_fornecedor(request):
-    ...
+    if request.method == 'POST':
+        nome_fornecedor = request.POST.get('nome_fornecedor')
+        contato = request.POST.get('contato')
+        descricao = request.POST.get('descricao')
+
+        fornecedor = Fornecedor.objects.create(
+            nome_fornecedor=nome_fornecedor,
+            contato=contato,
+            descricao=descricao
+        )
+        return redirect('home') 
+
+    return render(request, 'pages/cadastro_fornecedor.html')
 
 def relatorio(request):
     ...
