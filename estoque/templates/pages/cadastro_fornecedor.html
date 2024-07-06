@@ -1,4 +1,6 @@
-<div>
+{% load static %}
+<link rel="stylesheet" href="{% static 'estoque/css/style.css' %}">
+<div class="formulario-cadastro">
     <form action="{% url 'cadastro_fornecedor' %}" method="POST">
         {% csrf_token %}
         <label for="nome_fornecedor">Fornecedor</label>
