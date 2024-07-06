@@ -179,4 +179,27 @@
     text-align: center;
     color: #444;
   }
-  
+
+.tabela table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  margin-top: 25px;
+  overflow-x: auto;
+  overflow-y:auto;
+}
+.tabela th,td{
+  padding: 1rem;
+  text-align: left;
+}
+.tabela thead {
+  background-color: #13141f;
+  color: white;
+}
+.tabela tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tabela tbody tr:hover {
+  background-color: #ddd;
+}

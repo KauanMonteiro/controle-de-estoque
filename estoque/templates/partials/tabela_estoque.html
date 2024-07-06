@@ -1,0 +1,23 @@
+<div class="tabela">
+    <table>
+        <thead>
+
+            <th>Produto</th>
+            <th>quantidade</th>
+            <th>Fornecedor</th>
+        </thead>
+
+        <tbody>
+
+            {% for produto in produto%}
+            <tr>
+                <td>{{produto.nome}}</td>
+                <td>{{produto.quantidade}}</td>
+                <td>{{produto.fornecedor}}</td>
+                <td><i class="fas fa-edit"><a href="{% url "editar_produto" produto.id%}">editar</i></td></a>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
