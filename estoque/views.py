@@ -49,6 +49,7 @@ def estoque(request):
     fornecedor = Fornecedor.objects.all()
     produto = Produto.objects.all()
 
+<<<<<<< HEAD
     return render(request, 'pages/estoque.html',{'produto':produto})
 
 def editar_produto(request, id):
@@ -76,3 +77,6 @@ def editar_produto(request, id):
         return redirect('estoque')
 
     return render(request, 'pages/editar_produto.html', {'produto': produto, 'fornecedores': fornecedores})
+=======
+    return render(request, 'pages/estoque.html',{'produto':produto})
+>>>>>>> 0988705a146d5b80aa20505b88ebb9c29043b5dc
