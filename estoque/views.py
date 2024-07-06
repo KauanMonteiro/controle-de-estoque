@@ -46,4 +46,7 @@ def relatorio(request):
     ...
 
 def estoque(request):
-    ...
+    fornecedor = Fornecedor.objects.all()
+    produto = Produto.objects.all()
+
+    return render(request, 'pages/estoque.html',{'produto':produto})

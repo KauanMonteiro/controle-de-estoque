@@ -1,0 +1,20 @@
+<table>
+    <thead>
+
+        <th>Produto</th>
+        <th>quantidade</th>
+        <th>Fornecedor</th>
+    </thead>
+
+    <tbody>
+
+        {% for produto in produto%}
+        <tr>
+            <td>{{produto.nome}}</td>
+            <td>{{produto.quantidade}}</td>
+            <td>{{produto.fornecedor}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
