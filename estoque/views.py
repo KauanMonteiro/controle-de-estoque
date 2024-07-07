@@ -46,7 +46,6 @@ def relatorio(request):
     ...
 
 def estoque(request):
-    fornecedor = Fornecedor.objects.all()
     produto = Produto.objects.all()
 
     return render(request, 'pages/estoque.html',{'produto':produto})
@@ -76,3 +75,29 @@ def editar_produto(request, id):
         return redirect('estoque')
 
     return render(request, 'pages/editar_produto.html', {'produto': produto, 'fornecedores': fornecedores})
+
+def lista_fornecedores(request):
+    fornecedor = Fornecedor.objects.all()
+
+    return render(request, 'pages/lista_fornecedores.html',{'fornecedor':fornecedor})
+
+
+def editar_fornecedor(request,id):
+    fornecedor = get_object_or_404(Fornecedor, pk = id)
+
+    if request.method == 'POST':
+        nome_fornecedor = request.POST.get('nome_fornecedor')
+        contato = request.POST.get('contato')
+        descricao = request.POST.get('descricao')
+
+        if len(nome_fornecedor.strip()) == 0:
+            return redirect('editar_fornecedor',id =id)
+        
+        fornecedor.nome_fornecedor = nome_fornecedor
+        fornecedor.contato = contato
+        fornecedor.descricao = descricao
+        fornecedor.save()
+
+        return redirect('lista_fornecedores')
+
+    return render(request,'pages/editar_fornecedor.html',{'fornecedor':fornecedor})

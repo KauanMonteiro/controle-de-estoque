@@ -7,5 +7,7 @@ urlpatterns = [
     path('estoque/', views.estoque, name='estoque'),
     path('cadastrar_produto/',views.cadastrar_produto, name='cadastrar_produto'),
     path('cadastro_fornecedor/',views.cadastro_fornecedor, name='cadastro_fornecedor'),
-    path('editar_produto/<int:id>/', views.editar_produto, name='editar_produto')
+    path('editar_produto/<int:id>/', views.editar_produto, name='editar_produto'),
+    path('lista_fornecedores/', views.lista_fornecedores, name='lista_fornecedores'),
+    path('editar_fornecedor/<int:id>/', views.editar_fornecedor, name='editar_fornecedor'),
 ]
