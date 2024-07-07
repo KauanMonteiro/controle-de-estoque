@@ -28,5 +28,5 @@ class Vendas(models.Model):
     quantidade = models.IntegerField()
     data_venda = models.DateField(auto_now_add=True)
 
-def __str__(self) -> str:
-        return f'{self.produto.nome} - {self.data_venda}'
+    def __str__(self) -> str:
+        return f'{self.produto.nome} - {self.data_venda}'   
