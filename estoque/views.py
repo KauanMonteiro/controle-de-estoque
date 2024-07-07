@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Fornecedor, Produto
+from .models import Fornecedor, Produto,Vendas
 
 def home(request):
     return render(request, "pages/home.html")
@@ -119,3 +119,26 @@ def editar_fornecedor(request, id):
         return redirect('lista_fornecedores')
 
     return render(request, 'pages/editar_fornecedor.html', {'fornecedor': fornecedor})
+
+def vendas(request):
+    if request.method == 'POST':
+        produto_vendido_id = request.POST.get('produto')
+        quantidade = int(request.POST.get('quantidade'))  
+
+        produto = Produto.objects.get(pk=produto_vendido_id)
+
+        if produto.quantidade >= quantidade:
+            produto.quantidade -= quantidade
+            produto.save()
+
+            venda = Vendas.objects.create(
+                produto=produto,
+                quantidade=quantidade
+            )
+                
+            return redirect('estoque')  
+        else:
+            return redirect('home')  
+    
+    produtos = Produto.objects.all()
+    return render(request, 'pages/registrar_venda.html', {'produtos': produtos})

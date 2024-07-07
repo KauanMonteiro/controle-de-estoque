@@ -1,0 +1,18 @@
+{% include "partials/head.html" %}
+
+<div class="formulario-cadastro">
+<form method="post">
+    {% csrf_token %}
+    <label for="produto">Produto:</label>
+    <select name="produto" id="produto">
+        {% for produto in produtos %}
+        <option value="{{ produto.pk }}">{{ produto.nome }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="quantidade">Quantidade:</label>
+    <input type="number" name="quantidade" id="quantidade" min="1" required>
+    <br>
+    <button type="submit">Registrar Venda</button>
+</form>
+</div>
