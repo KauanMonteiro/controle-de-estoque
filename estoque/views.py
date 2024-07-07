@@ -30,13 +30,23 @@ def cadastrar_produto(request):
 def cadastro_fornecedor(request):
     if request.method == 'POST':
         nome_fornecedor = request.POST.get('nome_fornecedor')
-        contato = request.POST.get('contato')
-        descricao = request.POST.get('descricao')
+        telefone = request.POST.get('telefone')
+        documento = request.POST.get('documento')
+        rua = request.POST.get('rua')
+        numero = request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        estado = request.POST.get('estado')
 
         fornecedor = Fornecedor.objects.create(
             nome_fornecedor=nome_fornecedor,
-            contato=contato,
-            descricao=descricao
+            telefone=telefone,
+            documento=documento,
+            rua=rua,
+            numero=numero,
+            bairro=bairro,
+            cidade=cidade,
+            estado=estado,
         )
         return redirect('home') 
 
@@ -82,22 +92,30 @@ def lista_fornecedores(request):
     return render(request, 'pages/lista_fornecedores.html',{'fornecedor':fornecedor})
 
 
-def editar_fornecedor(request,id):
-    fornecedor = get_object_or_404(Fornecedor, pk = id)
+def editar_fornecedor(request, id):
+    fornecedor = get_object_or_404(Fornecedor, pk=id)
 
     if request.method == 'POST':
         nome_fornecedor = request.POST.get('nome_fornecedor')
-        contato = request.POST.get('contato')
-        descricao = request.POST.get('descricao')
+        telefone = request.POST.get('telefone')
+        documento = request.POST.get('documento')
+        rua = request.POST.get('rua')
+        numero = request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        estado = request.POST.get('estado')
 
-        if len(nome_fornecedor.strip()) == 0:
-            return redirect('editar_fornecedor',id =id)
-        
         fornecedor.nome_fornecedor = nome_fornecedor
-        fornecedor.contato = contato
-        fornecedor.descricao = descricao
+        fornecedor.telefone = telefone
+        fornecedor.documento = documento
+        fornecedor.rua = rua
+        fornecedor.numero = numero
+        fornecedor.bairro = bairro
+        fornecedor.cidade = cidade
+        fornecedor.estado = estado
+
         fornecedor.save()
 
         return redirect('lista_fornecedores')
 
-    return render(request,'pages/editar_fornecedor.html',{'fornecedor':fornecedor})
+    return render(request, 'pages/editar_fornecedor.html', {'fornecedor': fornecedor})

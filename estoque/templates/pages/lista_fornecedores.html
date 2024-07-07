@@ -1,24 +1,22 @@
-{% include "partials/head.html" %}
 
+{% include "partials/head.html" %}
 {% include "partials/header.html" %}
 <div class="tabela">
-
     <table>
         <thead>
-            <th>Fornecedor</th>
-            <th>contato</th>
-            <th>descricao</th>
+            <tr>
+                <th>Fornecedor</th>
+                <th>Contato</th>
+            </tr>
         </thead>
         <tbody>
             {% for fornecedor in fornecedor %}
                 <tr>
-                    <td>{{fornecedor.nome_fornecedor}}</td>
-                    <td>{{fornecedor.contato}}</td>
-                    <td>{{fornecedor.descricao}}</td>
-                    <td><i class="fas fa-edit"><a href="{% url "editar_fornecedor" fornecedor.id%}">editar</i></td></a>
+                    <td>{{ fornecedor.nome_fornecedor }}</td>
+                    <td>{{ fornecedor.telefone }}</td>
+                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}"><i class="fas fa-edit"></i> editar</a></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    
 </div>
