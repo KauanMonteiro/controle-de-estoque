@@ -259,3 +259,23 @@
 .popup-content button:hover {
   background-color: #49515a;
 }
+.botao {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1.6rem; /* Equivalente a 16px */
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  background-color: transparent;
+  color: #444; /* Cor do texto */
+  border: 2px solid transparent; /* Adicionando uma borda */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.botao:hover {
+  background-color: #ccc;
+  color: #000; /* Mudando a cor do texto no hover */
+  border-color: #ccc; /* Mudando a cor da borda no hover */
+}

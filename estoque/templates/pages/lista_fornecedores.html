@@ -23,7 +23,13 @@
                         {{ fornecedor.nome_fornecedor }}
                     </td>
                     <td>{{ fornecedor.telefone }}</td>
-                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}"><i class="fas fa-edit"></i> editar</a></td>
+                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}" class="botao"><i class="fas fa-edit"></i> editar</a></td>
+                    <form action="{% url 'excluir_fornecedor' fornecedor.id %}" method="post">
+                        {% csrf_token %}
+                        <td>
+                        <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
+                    </td>
+                    </form>
                 </tr>
             {% endfor %}
         </tbody>
@@ -71,7 +77,7 @@
 
             popupNome.textContent = "Fornecedor: " + nome;
             popupContato.textContent = "Contato: " + telefone;
-            popupDocumento.textContent = "Documento: " + documento;
+            popupDocumento.textContent = "CNPJ/CPF: " + documento;
             popupEndereco.textContent = "Endereço: " + rua + ", " + numero + " - " + bairro + ", " + cidade + ", " + estado;
 
             var popup = document.getElementById('popup');

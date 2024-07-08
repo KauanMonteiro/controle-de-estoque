@@ -142,3 +142,19 @@ def vendas(request):
     
     produtos = Produto.objects.all()
     return render(request, 'pages/registrar_venda.html', {'produtos': produtos})
+
+def excluir_produto(request, id):
+    produto = Produto.objects.get(pk=id)
+
+    if request.method == "POST":
+        produto.delete()
+        return redirect('home')
+    
+def excluir_fornecedor(request, id):
+    fornecedor = Fornecedor.objects.get(pk=id)
+    
+    if request.method == "POST":
+        fornecedor.delete()
+        return redirect('home')
+    
+    
