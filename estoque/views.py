@@ -1,5 +1,12 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Fornecedor, Produto,Vendas
+from django.db.models import Sum
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+from django.db.models.functions import TruncMonth
+
+from estoque import models
 
 def home(request):
     return render(request, "pages/home.html")
@@ -52,8 +59,7 @@ def cadastro_fornecedor(request):
 
     return render(request, 'pages/cadastro_fornecedor.html')
 
-def relatorio(request):
-    ...
+
 
 def estoque(request):
     produto = Produto.objects.all()
@@ -157,4 +163,52 @@ def excluir_fornecedor(request, id):
         fornecedor.delete()
         return redirect('home')
     
-    
+
+def dashboard(request):
+    vendas_por_mes = Vendas.objects.annotate(
+        mes_venda=TruncMonth('data_venda')
+    ).values('mes_venda').annotate(
+        total=Sum('quantidade')
+    ).order_by('mes_venda')
+
+    meses = []
+    quantidades_mes = []
+    for venda in vendas_por_mes:
+        meses.append(venda['mes_venda'].strftime('%b %Y'))
+        quantidades_mes.append(venda['total'])
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(meses, quantidades_mes)
+    plt.xlabel('Meses')
+    plt.ylabel('Vendas')
+    plt.title('Vendas Mensais')
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png2 = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
+
+    vendas_por_produto = Vendas.objects.values('produto__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
+
+    produtos = []
+    quantidades = []
+    for venda in vendas_por_produto:
+        produtos.append(venda['produto__nome'])
+        quantidades.append(venda['total'])
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(produtos, quantidades)
+    plt.xlabel('Produtos')
+    plt.ylabel('Quantidade Vendida')
+    plt.title('Produtos mais vendidos')
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
+
+    return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2})

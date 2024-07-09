@@ -262,13 +262,13 @@
 .botao {
   display: inline-block;
   padding: 10px 20px;
-  font-size: 1.6rem; /* Equivalente a 16px */
+  font-size: 1.6rem; 
   font-weight: bold;
   text-align: center;
   text-decoration: none;
   background-color: transparent;
-  color: #444; /* Cor do texto */
-  border: 2px solid transparent; /* Adicionando uma borda */
+  color: #444; 
+  border: 2px solid transparent; 
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
@@ -276,6 +276,37 @@
 
 .botao:hover {
   background-color: #ccc;
-  color: #000; /* Mudando a cor do texto no hover */
-  border-color: #ccc; /* Mudando a cor da borda no hover */
+  color: #000;
+  border-color: #ccc;
+}
+.container {
+  display: flex;  
+  justify-content: space-between; 
+  flex-wrap: wrap;
+}
+
+.grafico-container {
+  flex: 1 1 45%; 
+  margin: 2rem 1%;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.grafico-container h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+  color: #444;
+}
+
+.grafico-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
