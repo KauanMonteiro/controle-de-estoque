@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Fornecedor, Produto,Vendas
+from .models import Fornecedor, Produto,Vendas,Pagamento
 from django.db.models import Sum
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -97,7 +97,6 @@ def lista_fornecedores(request):
 
     return render(request, 'pages/lista_fornecedores.html',{'fornecedor':fornecedor})
 
-
 def editar_fornecedor(request, id):
     fornecedor = get_object_or_404(Fornecedor, pk=id)
 
@@ -163,8 +162,10 @@ def excluir_fornecedor(request, id):
         fornecedor.delete()
         return redirect('home')
     
-
 def dashboard(request):
+
+    pagamento = Pagamento.objects.all()
+
     vendas_por_mes = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
@@ -211,4 +212,5 @@ def dashboard(request):
     image_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
-    return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2})
+    return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2, 'pagamento':pagamento})
+
