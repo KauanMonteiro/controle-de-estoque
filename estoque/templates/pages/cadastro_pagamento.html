@@ -1,0 +1,30 @@
+{% include "partials/head.html" %}
+<div class="formulario-cadastro">
+    <form method="POST" action="{% url 'cadastro_pagamento' %}">
+        {% csrf_token %}
+        <label for="fornecedor">Fornecedor</label>
+        <select name="fornecedor" id="fornecedor">
+            {% for fornecedor in fornecedores %}
+                <option value="{{ fornecedor.id }}">{{ fornecedor.nome_fornecedor }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="descricao">Descrição</label>
+        <input type="text" id="descricao" name="descricao" placeholder="Descrição do pagamento">
+
+        <label for="valor">Valor</label>
+        <input type="number" name="valor" id="valor" placeholder="">
+
+        <label for="data_vencimento">Data Vencimento</label>
+        <input type="date" name="data_vencimento" id="data_vencimento">
+
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            {% for status in PAGAMENTO_STATUS %}
+                <option value="{{ status.0 }}">{{ status.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Salvar Pagamento</button>
+    </form>
+</div>

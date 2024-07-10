@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Fornecedor, Produto,Vendas,Pagamento
+from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS
 from django.db.models import Sum
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -216,4 +216,23 @@ def area_despesas(request):
     return render(request,'pages/area_despesas.html',{'pagamento':pagamento})
 
 def cadastro_pagamento(request):
-    ...
+    fornecedores = Fornecedor.objects.all()
+
+    if request.method == 'POST':
+        fornecedor_id = request.POST.get('fornecedor')
+        descricao = request.POST.get('descricao')
+        valor = request.POST.get('valor')
+        data_vencimento = request.POST.get('data_vencimento')
+        status = request.POST.get('status')
+
+        pagamento = Pagamento.objects.create(
+            fornecedor_id=fornecedor_id,
+            descricao=descricao,
+            valor=valor,
+            data_vencimento=data_vencimento,
+            status=status
+        )
+
+        return redirect('area_despesas')
+
+    return render(request, 'pages/cadastro_pagamento.html', {'fornecedores': fornecedores, 'PAGAMENTO_STATUS': PAGAMENTO_STATUS})
