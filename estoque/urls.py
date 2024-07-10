@@ -12,6 +12,8 @@ urlpatterns = [
     path('editar_fornecedor/<int:id>/', views.editar_fornecedor, name='editar_fornecedor'),
     path('registrar_vendas/',views.vendas, name='vendas'),
     path('estoque/delete/<int:id>/',views.excluir_produto, name='excluir_produto'),
-    path('fornecedor/delete/<int:id>/',views.excluir_fornecedor, name='excluir_fornecedor')
+    path('fornecedor/delete/<int:id>/',views.excluir_fornecedor, name='excluir_fornecedor'),
+    path('area_despesas/', views.area_despesas, name='area_despesas'),
+    path('cadastro_pagamento/', views.cadastro_pagamento, name='cadastro_pagamento')
 ]
 

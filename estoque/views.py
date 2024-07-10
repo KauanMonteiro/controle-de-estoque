@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from django.db.models.functions import TruncMonth
-
 from estoque import models
 
 def home(request):
@@ -33,7 +32,6 @@ def cadastrar_produto(request):
 
     return render(request, "pages/cadastro_produto.html", {'fornecedor': fornecedor})
 
-
 def cadastro_fornecedor(request):
     if request.method == 'POST':
         nome_fornecedor = request.POST.get('nome_fornecedor')
@@ -58,8 +56,6 @@ def cadastro_fornecedor(request):
         return redirect('home') 
 
     return render(request, 'pages/cadastro_fornecedor.html')
-
-
 
 def estoque(request):
     produto = Produto.objects.all()
@@ -214,3 +210,10 @@ def dashboard(request):
 
     return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2, 'pagamento':pagamento})
 
+def area_despesas(request):
+    pagamento = Pagamento.objects.all()
+
+    return render(request,'pages/area_despesas.html',{'pagamento':pagamento})
+
+def cadastro_pagamento(request):
+    ...

@@ -1,0 +1,56 @@
+
+<div class="tabela">
+    <div id="tabela-container">
+        <table id="tabela-pagamentos">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data de Vencimento</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pagamento in pagamento %}
+                <tr>
+                    <td>{{ pagamento.fornecedor }}</td>
+                    <td>{{ pagamento.descricao }}</td>
+                    <td>{{ pagamento.valor }}</td>
+                    <td>{{ pagamento.data_vencimento }}</td>
+                    <td>{{ pagamento.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button id="ver-mais-btn" class="botao2">Ver Mais</button>
+    </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var verMaisBtn = document.getElementById('ver-mais-btn');
+    var tabelaPagamentos = document.getElementById('tabela-pagamentos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    var linhasVisiveis = 3; 
+
+    for (var i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
+        tabelaPagamentos[i].style.display = 'none';
+    }
+
+    function alternarLinhas() {
+        for (var i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
+            if (tabelaPagamentos[i].style.display === 'none') {
+                tabelaPagamentos[i].style.display = 'table-row';
+            } else {
+                tabelaPagamentos[i].style.display = 'none';
+            }
+        }
+
+        if (verMaisBtn.textContent === 'Ver Mais') {
+            verMaisBtn.textContent = 'Ver Menos';
+        } else {
+            verMaisBtn.textContent = 'Ver Mais';
+        }
+    }
+
+    verMaisBtn.addEventListener('click', alternarLinhas);});
+</script>
