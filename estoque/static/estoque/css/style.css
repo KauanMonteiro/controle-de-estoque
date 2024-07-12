@@ -125,7 +125,7 @@
   
 
 
-  .formulario-cadastro{
+  .formulario{
     text-align: center;
     margin: 20px auto;
     padding: 20px;
@@ -139,7 +139,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .formulario-cadastro label {
+  .formulario label {
     display: block;
     margin-bottom: 0.5rem;
     font-size: 1.7rem;
@@ -148,7 +148,7 @@
     letter-spacing: 1px;
   }
   
-  .formulario-cadastro input {
+  .formulario input {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -157,7 +157,7 @@
     border-radius: 4px;
   }
   
-  .formulario-cadastro button {
+  .formulario button {
     padding: 1rem 2rem;
     font-size: 1.6rem;
     background-color: #4CAF50;
@@ -168,10 +168,10 @@
     transition: background-color 0.3s ease;
   }
   
-  .formulario-cadastro button:hover {
+  .formulario button:hover {
     background-color: #45a049;
   }
-  .formulario-cadastro select {
+  .formulario select {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -182,7 +182,7 @@
     color: #444;
   }
   
-  .formulario-cadastro option {
+  .formulario option {
     font-size: 1.6rem;
     text-align: center;
     color: #444;

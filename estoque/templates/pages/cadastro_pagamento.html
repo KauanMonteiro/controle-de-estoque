@@ -1,5 +1,5 @@
 {% include "partials/head.html" %}
-<div class="formulario-cadastro">
+<div class="formulario">
     <form method="POST" action="{% url 'cadastro_pagamento' %}">
         {% csrf_token %}
         <label for="fornecedor">Fornecedor</label>
