@@ -1,0 +1,59 @@
+<div class="tabela">
+    <div id="tabela-container">
+        <table class="tabela-pagamentos">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data de Vencimento</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pagamento in pagamento_pagos_cancelados %}
+                <tr>
+                    <td>{{ pagamento.fornecedor }}</td>
+                    <td>{{ pagamento.descricao }}</td>
+                    <td>{{ pagamento.valor }}</td>
+                    <td>{{ pagamento.data_vencimento }}</td>
+                    <td>{{ pagamento.status }}</td>
+                    <td>
+                        <i class="fas fa-edit">
+                            <a href="{% url 'editar_pagamento' pagamento.id %}" class="botao">editar</a>
+                        </i>
+                    </td>                  
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="ver-mais-btn botao2">Ver Mais</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const verMaisBtn = document.querySelector('.ver-mais-btn');
+    const tabelaPagamentos = document.querySelector('.tabela-pagamentos tbody').getElementsByTagName('tr');
+    const linhasVisiveis = 3;
+
+    // Hide rows beyond the visible limit
+    for (let i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
+        tabelaPagamentos[i].style.display = 'none';
+    }
+
+    verMaisBtn.addEventListener('click', function() {
+        let allHidden = true;
+        for (let i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
+            if (tabelaPagamentos[i].style.display === 'none') {
+                tabelaPagamentos[i].style.display = 'table-row';
+                allHidden = false;
+            } else {
+                tabelaPagamentos[i].style.display = 'none';
+            }
+        }
+        verMaisBtn.textContent = allHidden ? 'Ver Mais' : 'Ver Menos';
+    });
+});
+</script>

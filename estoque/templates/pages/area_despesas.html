@@ -1,19 +1,26 @@
-{% include "partials/head.html" %}
 
+{% include "partials/head.html" %}
 <header class="main-header-container">
     <div class="main-header container">
         <h1>
             <a class="main-logo" href="{% url 'home' %}">
-                
                 <span class="main-logo-text">Despesas</span>
             </a>
         </h1>
     </div>
 </header>
-<div >
-    <a href="{% url 'cadastro_pagamento' %}" ><button class="botao2"> <i class="fas fa-plus"></i> Adiciona Pagamento</button></a>
+<div>
+    <a href="{% url 'cadastro_pagamento' %}">
+        <button class="botao2"><i class="fas fa-plus"></i> Adicionar Pagamento</button>
+    </a>
 </div>
-</div>
+
 <div class="grafico-container">
-{% include "partials/tabela_despesas.html" %}
+    <h1>Despesas Pendentes</h1>
+    {% include "partials/tabela_despesas.html" %}
+</div>
+
+<div class="grafico-container">
+    <h1>Despesas Pagas</h1>
+    {% include "partials/tabela_despesas_pagos.html" %}
 </div>

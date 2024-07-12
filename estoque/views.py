@@ -7,6 +7,7 @@ import base64
 from django.db.models.functions import TruncMonth
 from estoque import models
 
+
 def home(request):
     return render(request, "pages/home.html")
 
@@ -210,10 +211,11 @@ def dashboard(request):
 
     return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2, 'pagamento':pagamento})
 
-def area_despesas(request):
-    pagamento = Pagamento.objects.all()
+def area_despesas(request): 
+    pagamento = Pagamento.objects.exclude(status='pago').exclude(status='cancelado')
+    pagamento_pagos_cancelados = Pagamento.objects.exclude(status='pendente')
 
-    return render(request,'pages/area_despesas.html',{'pagamento':pagamento})
+    return render(request, 'pages/area_despesas.html', {'pagamento': pagamento, 'pagamento_pagos_cancelados':pagamento_pagos_cancelados})
 
 def cadastro_pagamento(request):
     fornecedores = Fornecedor.objects.all()
@@ -236,6 +238,7 @@ def cadastro_pagamento(request):
         return redirect('area_despesas')
 
     return render(request, 'pages/cadastro_pagamento.html', {'fornecedores': fornecedores, 'PAGAMENTO_STATUS': PAGAMENTO_STATUS})
+
 def editar_pagamento(request, id):
     pagamento = get_object_or_404(Pagamento, pk=id)
     fornecedores = Fornecedor.objects.all()
