@@ -1,0 +1,33 @@
+{% include "partials/head.html" %}
+
+<div class="formulario">
+<form action="" method="post">
+    {% csrf_token %}
+
+    <label for="fornecedor">Fornecedor</label>
+    <select name="fornecedor" id="fornecedor" required>
+        {% for fornecedores in fornecedores %}
+        <option value="{{fornecedores.id}}" {% if fornecedores.id == produto.fornecedores.id %} selected {% endif %}>{{ fornecedores.nome_fornecedor }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="descricao">Descrição</label>
+    <input type="text" id="descricao" name="descricao" value="{{pagamento.descricao}}" required>
+
+    <label for="valor">Valor</label>
+    <input type="number" id="valor" name="valor" value="{{ pagamento.valor }}"required>
+
+    <label for="data_vencimento">Data vencimento</label>
+    <input type="date" name="data_vencimento" id="data_vencimento" value="{{pagamento.data_vencimento}}"required>
+    
+    <label for="status">Status</label>
+    <select name="status" id="status"required>
+        {% for status in PAGAMENTO_STATUS %}
+            <option value="{{ status.0 }}" {% if status.0 == selected_status %}selected{% endif %}>{{ status.1 }}</option>
+        {% endfor %}
+    </select>
+    
+
+    <button type="submit">Salvar Alterações</button>
+</form>
+</div>

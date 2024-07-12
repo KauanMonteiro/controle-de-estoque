@@ -19,6 +19,7 @@
                     <td>{{ pagamento.valor }}</td>
                     <td>{{ pagamento.data_vencimento }}</td>
                     <td>{{ pagamento.status }}</td>
+                    <td> <i class="fas fa-edit"><a href="{% url "editar_pagamento" pagamento.id %}" class="botao">editar</i></a></td>                  
                 </tr>
                 {% endfor %}
             </tbody>

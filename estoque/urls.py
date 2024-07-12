@@ -14,6 +14,7 @@ urlpatterns = [
     path('estoque/delete/<int:id>/',views.excluir_produto, name='excluir_produto'),
     path('fornecedor/delete/<int:id>/',views.excluir_fornecedor, name='excluir_fornecedor'),
     path('area_despesas/', views.area_despesas, name='area_despesas'),
-    path('cadastro_pagamento/', views.cadastro_pagamento, name='cadastro_pagamento')
-]
+    path('cadastro_pagamento/', views.cadastro_pagamento, name='cadastro_pagamento'),
+    path('editar_pagamento/<int:id>/', views.editar_pagamento, name='editar_pagamento')
+    ]
 

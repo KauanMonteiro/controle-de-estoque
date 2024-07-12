@@ -236,3 +236,31 @@ def cadastro_pagamento(request):
         return redirect('area_despesas')
 
     return render(request, 'pages/cadastro_pagamento.html', {'fornecedores': fornecedores, 'PAGAMENTO_STATUS': PAGAMENTO_STATUS})
+def editar_pagamento(request, id):
+    pagamento = get_object_or_404(Pagamento, pk=id)
+    fornecedores = Fornecedor.objects.all()
+    
+    if request.method == 'POST':
+        fornecedor_id = request.POST.get('fornecedor')
+        descricao = request.POST.get('descricao')
+        valor = request.POST.get('valor')
+        data_vencimento = request.POST.get('data_vencimento')
+        status = request.POST.get('status')
+
+        # Fetch the Fornecedor instance
+        fornecedor = get_object_or_404(Fornecedor, pk=fornecedor_id)
+
+        pagamento.fornecedor = fornecedor
+        pagamento.descricao = descricao
+        pagamento.valor = valor
+        pagamento.data_vencimento = data_vencimento
+        pagamento.status = status
+
+        pagamento.save()
+        return redirect('area_despesas')
+    
+    return render(request, 'pages/editar_pagamento.html', {
+        'pagamento': pagamento,
+        'fornecedores': fornecedores,
+        'PAGAMENTO_STATUS': PAGAMENTO_STATUS
+    })
