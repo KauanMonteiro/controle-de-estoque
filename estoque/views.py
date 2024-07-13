@@ -320,7 +320,25 @@ def lista_clientes(request):
     return render(request,'pages/lista_cliente.html',{'clientes':clientes})
 
 def excluir_cliente(request,id):
-    ...
+    cliente = get_object_or_404(Cliente, pk=id)
+
+    if request.method == 'POST':
+        cliente.delete()
+        return redirect('lista_clientes')
 
 def editar_cliente(request,id):
-    ...
+    cliente = get_object_or_404(Cliente, pk=id)
+    
+    if request.method =='POST':
+        nome = request.POST.get('nome')
+        telefone = request.POST.get('telefone')
+        documento = request.POST.get('documento')
+
+        cliente.nome = nome
+        cliente.telefone = telefone
+        cliente.documento = documento
+
+        cliente.save()
+        return redirect('lista_cliente')
+    
+    return render(request,'pages/editar_cliente.html')
