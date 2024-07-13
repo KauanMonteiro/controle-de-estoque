@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS
 from django.db.models import Sum
@@ -7,7 +6,6 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from django.db.models.functions import TruncMonth
-from estoque import models
 
 
 def home(request):
@@ -292,3 +290,10 @@ def editar_pagamento(request, id):
         'fornecedores': fornecedores,
         'PAGAMENTO_STATUS': PAGAMENTO_STATUS
     })
+
+def excluir_despesas(request, id):
+    pagamento = get_object_or_404(Pagamento, pk=id)
+
+    if request.method == "POST":
+        pagamento.delete()
+        return redirect('home')

@@ -6,7 +6,7 @@
             <tr>
                 <th>Fornecedor</th>
                 <th>Contato</th>
-                <th>Ações</th>
+                <th>Opções</th>
             </tr>
         </thead>
         <tbody>
@@ -23,10 +23,9 @@
                         {{ fornecedor.nome_fornecedor }}
                     </td>
                     <td>{{ fornecedor.telefone }}</td>
-                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}" class="botao"><i class="fas fa-edit"></i> editar</a></td>
+                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}" class="botao"><i class="fas fa-edit"></i> editar</a>
                     <form action="{% url 'excluir_fornecedor' fornecedor.id %}" method="post">
                         {% csrf_token %}
-                        <td>
                         <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
                     </td>
                     </form>

@@ -5,6 +5,7 @@
             <th>Produto</th>
             <th>quantidade</th>
             <th>Fornecedor</th>
+            <th>Opções</th>
         </thead>
 
         <tbody>
@@ -14,11 +15,10 @@
                 <td>{{produto.nome}}</td>
                 <td>{{produto.quantidade}}</td>
                 <td>{{produto.fornecedor}}</td>
-                <td> <i class="fas fa-edit"><a href="{% url "editar_produto" produto.id%}" class="botao">editar</i></a></td>
+                <td> <a href="{% url "editar_produto" produto.id%}" class="botao"><i class="fas fa-edit"></i>editar</a>
 
                 <form action="{% url 'excluir_produto' produto.id %}" method="post">
                     {% csrf_token %}
-                    <td>
                     <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
                 </td>
                 </form>
