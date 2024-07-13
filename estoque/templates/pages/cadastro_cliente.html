@@ -1,0 +1,18 @@
+{% include "partials/head.html" %}
+<div class="formulario">
+
+    <form action="{% url "cadastro_cliente" %}" method="POST">
+        {% csrf_token %}
+        <label for="nome" >Nome</label>
+        <input type="text" name="nome" id="nome" required placeholder="Digite o nome">
+
+        <label for="telefone">Telefone</label>
+        <input type="tel" id="telefone" name="telefone" required placeholder="Digite o telefone">
+
+        <label for="documento">CNPJ/CPF</label>
+        <input type="text" id="documento" name="documento" placeholder="Digite o documento  ">
+
+        <button type="submit">Cadastrar Cliente</button>
+    </form>
+
+</div>

@@ -1,5 +1,11 @@
 from django.db import models
 
+RECEBIMENTO_STATUS = [
+    ('pendente', 'Pendente'),
+    ('pago', 'Pago'),
+    ('cancelado', 'Cancelado'),
+]
+
 PAGAMENTO_STATUS = [
     ('pendente', 'Pendente'),
     ('pago', 'Pago'),
@@ -46,3 +52,13 @@ class Pagamento(models.Model):
 
     def __str__(self) -> str:
         return f' Pagamento {self.fornecedor}-{self.data_vencimento}'
+    
+class Cliente(models.Model):
+    nome = models.CharField(max_length=120)
+    telefone = models.CharField(max_length=20)
+    documento = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.nome
+
+

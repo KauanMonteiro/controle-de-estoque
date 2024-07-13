@@ -16,6 +16,8 @@ urlpatterns = [
     path('area_despesas/', views.area_despesas, name='area_despesas'),
     path('cadastro_pagamento/', views.cadastro_pagamento, name='cadastro_pagamento'),
     path('editar_pagamento/<int:id>/', views.editar_pagamento, name='editar_pagamento'),
-    path('excluir_despesas/<int:id>/', views.excluir_despesas, name='excluir_despesas')
+    path('excluir_despesas/<int:id>/', views.excluir_despesas, name='excluir_despesas'),
+    path('cadastro_cliente/', views.cadastro_cliente, name='cadastro_cliente'),
+    path('lista_clientes',views.lista_clientes,name='lista_clientes')
     ]
 

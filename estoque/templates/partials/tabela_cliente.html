@@ -1,0 +1,22 @@
+<div class="tabela">
+    <table>
+        <thead>
+            <tr>
+                <th>nome</th>
+                <th>telefone</th>
+                <th>documento</th>
+                <th>opções</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for clientes in clientes %}
+                <tr>
+                    <td>{{clientes.nome}}</td>
+                    <td>{{clientes.telefone}}</td>
+                    <td>{{clientes.documento}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

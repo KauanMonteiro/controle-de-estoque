@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS
+from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS,Cliente
 from django.db.models import Sum
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -297,3 +297,30 @@ def excluir_despesas(request, id):
     if request.method == "POST":
         pagamento.delete()
         return redirect('home')
+    
+def cadastro_cliente(request):
+    cliente = Cliente.objects.all()
+
+    if request.method == "POST":
+        nome = request.POST.get('nome')
+        telefone = request.POST.get('telefone')
+        documento = request.POST.get('documento')
+
+        cliente = Cliente.objects.create (
+            nome = nome,
+            telefone = telefone,
+            documento = documento
+        )
+        return redirect('lista_clientes')
+    return render(request,'pages/cadastro_cliente.html')
+
+def lista_clientes(request):
+    clientes = Cliente.objects.all()
+
+    return render(request,'pages/lista_cliente.html',{'clientes':clientes})
+
+def excluir_cliente(request,id):
+    ...
+
+def editar_cliente(request,id):
+    ...
