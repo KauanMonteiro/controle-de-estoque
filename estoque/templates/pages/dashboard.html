@@ -1,17 +1,17 @@
-{% include "partials/head.html" %}
+  {% include "partials/head.html" %}
 
-<header class="main-header-container">
+  <header class="main-header-container">
     <div class="main-header container">
-        <h1>
-            <a class="main-logo" href="{% url 'home' %}">
-              <i class="fas fa-chart-line"></i>
-                <span class="main-logo-text">Dashboard</span>
-            </a>
-        </h1>
+      <h1>
+        <a class="main-logo" href="{% url 'home' %}">
+          <i class="fas fa-chart-line"></i>
+          <span class="main-logo-text">Dashboard</span>
+        </a>
+      </h1>
     </div>
-</header>
+  </header>
 
-<div class="container">
+  <div class="container">
     <div class="grafico-container">
       <h2>Vendas Mensais</h2>
       <img class="grafico-img" src="data:image/png;base64,{{ grafico_vendas_mes }}" alt="Gráfico Vendas Mensais">
@@ -19,8 +19,14 @@
 
     <div class="grafico-container">
       <h2>Produtos Mais Vendidos</h2>
-      <img class="grafico-img" src="data:image/png;base64,{{ grafico_mais_vendidos }}" alt="Gráfico Produtos Mais Vendidos">
+      <img class="grafico-img" src="data:image/png;base64,{{ grafico_mais_vendidos }}"
+        alt="Gráfico Produtos Mais Vendidos">
     </div>
   </div>
-  
+
   {% include "partials/tabela_despesas.html" %}
+
+  <div class="grafico-tabela-container grafico-container">
+    <img class="grafico-img-alternativo" src="data:image/png;base64,{{ image_despesas_png }}" alt="Gráfico Produtos Mais Vendidos">
+    {% include "partials/tabela_despesas_fornecedores.html" %}
+  </div>

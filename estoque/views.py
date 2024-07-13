@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS
 from django.db.models import Sum
@@ -157,11 +159,12 @@ def excluir_fornecedor(request, id):
     
     if request.method == "POST":
         fornecedor.delete()
-        return redirect('home')
-    
-def dashboard(request):
+        return redirect('home') 
 
+def dashboard(request):
     pagamento = Pagamento.objects.all()
+    mes_atual = datetime.now().month
+    ano_atual = datetime.now().year
 
     vendas_por_mes = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
@@ -169,17 +172,15 @@ def dashboard(request):
         total=Sum('quantidade')
     ).order_by('mes_venda')
 
-    meses = []
-    quantidades_mes = []
-    for venda in vendas_por_mes:
-        meses.append(venda['mes_venda'].strftime('%b %Y'))
-        quantidades_mes.append(venda['total'])
+    meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
+    quantidades_mes = [venda['total'] for venda in vendas_por_mes]
 
     plt.figure(figsize=(10, 6))
-    plt.bar(meses, quantidades_mes)
+    plt.plot(meses, quantidades_mes, marker='o', linestyle='-')
     plt.xlabel('Meses')
     plt.ylabel('Vendas')
     plt.title('Vendas Mensais')
+    plt.xticks(rotation=45)
     plt.tight_layout()
 
     buffer = BytesIO()
@@ -190,17 +191,14 @@ def dashboard(request):
 
     vendas_por_produto = Vendas.objects.values('produto__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
 
-    produtos = []
-    quantidades = []
-    for venda in vendas_por_produto:
-        produtos.append(venda['produto__nome'])
-        quantidades.append(venda['total'])
+    produtos = [venda['produto__nome'] for venda in vendas_por_produto]
+    quantidades = [venda['total'] for venda in vendas_por_produto]
 
     plt.figure(figsize=(10, 6))
     plt.bar(produtos, quantidades)
-    plt.xlabel('Produtos')
     plt.ylabel('Quantidade Vendida')
     plt.title('Produtos mais vendidos')
+    plt.xticks(rotation=45)
     plt.tight_layout()
 
     buffer = BytesIO()
@@ -209,7 +207,35 @@ def dashboard(request):
     image_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
-    return render(request, 'pages/dashboard.html', {'grafico_mais_vendidos': image_png, 'grafico_vendas_mes': image_png2, 'pagamento':pagamento})
+    despesas_por_fornecedor_mes = Pagamento.objects.filter(data_vencimento__month=mes_atual, data_vencimento__year=ano_atual)\
+        .values('fornecedor__nome_fornecedor')\
+        .annotate(total=Sum('valor'))\
+        .order_by('-total')[:10]
+
+    fornecedor = [despesa['fornecedor__nome_fornecedor'] for despesa in despesas_por_fornecedor_mes]
+    valor = [despesa['total'] for despesa in despesas_por_fornecedor_mes]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(fornecedor, valor, color='salmon')
+    plt.xlabel('Fornecedor')
+    plt.ylabel('Valor da Despesa')
+    plt.title('Despesas por Fornecedor no Mês Atual')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_despesas_png = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
+
+    return render(request, 'pages/dashboard.html', {
+        'grafico_mais_vendidos': image_png,
+        'grafico_vendas_mes': image_png2,
+        'pagamento': pagamento,
+        'image_despesas_png': image_despesas_png,
+        'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
+    })
 
 def area_despesas(request): 
     pagamento = Pagamento.objects.exclude(status='pago').exclude(status='cancelado')
@@ -250,7 +276,6 @@ def editar_pagamento(request, id):
         data_vencimento = request.POST.get('data_vencimento')
         status = request.POST.get('status')
 
-        # Fetch the Fornecedor instance
         fornecedor = get_object_or_404(Fornecedor, pk=fornecedor_id)
 
         pagamento.fornecedor = fornecedor

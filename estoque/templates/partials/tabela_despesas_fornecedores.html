@@ -1,0 +1,20 @@
+<div class="tabela-despesas-container tabela">
+    <h2>Despesas por Fornecedor no Mês Atual</h2>
+    <table class="tabela-custom ">
+      <thead>
+        <tr>
+          <th>Fornecedor</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for despesa in despesas_por_fornecedor_mes %}
+        <tr>
+          <td>{{ despesa.fornecedor__nome_fornecedor }}</td>
+          <td>{{ despesa.total }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+

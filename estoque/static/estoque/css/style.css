@@ -330,3 +330,17 @@
 .botao2:hover{
   background-color: #000000;
 }
+.grafico-tabela-container {
+  margin-top: 5rem;
+  display: flex;
+  align-items: flex-start; 
+}
+
+.grafico-img-alternativo {
+  max-width: 50%; 
+  margin-right: 2%; 
+}
+
+.tabela-despesas-container {
+  flex: 1; 
+}
