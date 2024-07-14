@@ -1,10 +1,67 @@
 <div class="menu-home">
-    <a href="{% url 'cadastrar_produto' %}" class="botao-menu-home"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a>
-    <a href="{% url 'cadastro_fornecedor' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Fornecedor</a>
-    <a href="{% url 'estoque' %}" class="botao-menu-home"><i class="fas fa-box"></i> Verificar Estoque</a>
-    <a href="{% url 'lista_fornecedores' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Fornecedores</a>
-    <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
-    <a href="{% url "dashboard" %}" class="botao-menu-home"><i class="fas fa-chart-line"></i> Dashboard</a>
-    <a href="{% url "area_despesas" %}" class="botao-menu-home"><i class="fas fa-money-bill-wave"></i> Despesas</a>
-    <a href="" class="botao-menu-home"><i class="fas fa-hand-holding-usd"></i> Recebimento</a>
+    <div class="menu-category">
+        <button onclick="toggleCategory('produtos')">Produtos</button>
+        <div class="submenu" id="menu-produtos">
+            <a href="{% url 'cadastrar_produto' %}" class="botao-menu-home"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a>
+            <a href="{% url 'estoque' %}" class="botao-menu-home"><i class="fas fa-box"></i> Verificar Estoque</a>
+        </div>
+    </div>
+    
+    <div class="menu-category">
+        <button onclick="toggleCategory('fornecedores')">Fornecedores</button>
+        <div class="submenu" id="menu-fornecedores">
+            <a href="{% url 'cadastro_fornecedor' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Fornecedor</a>
+            <a href="{% url 'lista_fornecedores' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Fornecedores</a>
+        </div>
+    </div>
+
+    <div class="menu-category">
+        <button onclick="toggleCategory('clientes')">Clientes</button>
+        <div class="submenu" id="menu-clientes">
+            <a href="{% url 'cadastro_cliente' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Cliente</a>
+            <a href="{% url 'lista_clientes' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Clientes</a>
+        </div>
+    </div>
+
+    <div class="menu-category">
+        <button onclick="toggleCategory('financeiro')">Financeiro</button>
+        <div class="submenu" id="menu-financeiro">
+            <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
+            <a href="{% url "dashboard" %}" class="botao-menu-home"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="{% url "area_despesas" %}" class="botao-menu-home"><i class="fas fa-money-bill-wave"></i> Despesas</a>
+            <a href="" class="botao-menu-home"><i class="fas fa-hand-holding-usd"></i> Recebimento</a>
+        </div>
+    </div>
 </div>
+    
+<script>
+    var lastOpened = null;
+    
+    function toggleCategory(category) {
+        var menu = document.getElementById('menu-' + category);
+    
+        var isVisible = getComputedStyle(menu).display !== 'none';
+    
+        if (lastOpened && lastOpened !== menu) {
+            lastOpened.style.display = 'none';
+        }
+    
+        if (!isVisible) {
+            menu.style.display = 'block';
+            lastOpened = menu;
+        } else {
+            menu.style.display = 'none';
+            lastOpened = null;
+        }
+    }
+    
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.menu-category')) {
+            if (lastOpened) {
+                lastOpened.style.display = 'none';
+                lastOpened = null;
+            }
+        }
+    });
+    </script>
+    
