@@ -339,6 +339,7 @@ def editar_cliente(request,id):
         cliente.documento = documento
 
         cliente.save()
-        return redirect('lista_cliente')
+        return redirect('lista_clientes')
     
-    return render(request,'pages/editar_cliente.html')
+    return render(request,'pages/editar_cliente.html',{'cliente':cliente})
+
