@@ -28,6 +28,7 @@ class Fornecedor(models.Model):
 class Produto(models.Model):
     nome = models.CharField(max_length=100)
     quantidade = models.IntegerField(default=0)
+    preco = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE)
 
     def __str__(self) -> str:

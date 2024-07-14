@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS,Cliente
-from django.db.models import Sum
+from django.db.models import Sum,F  
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -163,6 +163,29 @@ def dashboard(request):
     pagamento = Pagamento.objects.all()
     mes_atual = datetime.now().month
     ano_atual = datetime.now().year
+    vendas_por_mes = Vendas.objects.annotate(
+        mes_venda=TruncMonth('data_venda')
+    ).values('mes_venda').annotate(
+        total_faturamento=Sum(F('produto__preco') * F('quantidade'))
+    ).order_by('mes_venda')
+
+    meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
+    faturamento = [venda['total_faturamento'] or 0 for venda in vendas_por_mes]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(meses, faturamento, marker='o', linestyle='-')
+    plt.title('Faturamento por Mês')
+    plt.xlabel('Mês')
+    plt.ylabel('Faturamento')
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_faturamento_png = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
 
     vendas_por_mes = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
@@ -179,6 +202,7 @@ def dashboard(request):
     plt.ylabel('Vendas')
     plt.title('Vendas Mensais')
     plt.xticks(rotation=45)
+    plt.grid(True)
     plt.tight_layout()
 
     buffer = BytesIO()
@@ -233,6 +257,7 @@ def dashboard(request):
         'pagamento': pagamento,
         'image_despesas_png': image_despesas_png,
         'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
+        'image_faturamento_png': image_faturamento_png,
     })
 
 def area_despesas(request): 
@@ -343,3 +368,8 @@ def editar_cliente(request,id):
     
     return render(request,'pages/editar_cliente.html',{'cliente':cliente})
 
+def recebimentos(request):
+    vendas = Vendas.objects.all()
+    for venda in vendas:
+        venda.total = venda.produto.preco * venda.quantidade
+    return render(request, 'pages/recebimentos.html', {'vendas': vendas})
