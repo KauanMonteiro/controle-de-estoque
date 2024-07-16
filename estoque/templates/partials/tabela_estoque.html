@@ -1,30 +1,58 @@
 <div class="tabela">
-    <table>
+    <table id="tabela-produtos" class="tabela-custom">
         <thead>
-
-            <th>Produto</th>
-            <th>quantidade</th>
-            <th>Fornecedor</th>
-            <th>Opções</th>
-        </thead>
-
-        <tbody>
-
-            {% for produto in produto%}
             <tr>
-                <td>{{produto.nome}}</td>
-                <td>{{produto.quantidade}}</td>
-                <td>{{produto.fornecedor}}</td>
-                <td> <a href="{% url "editar_produto" produto.id%}" class="botao"><i class="fas fa-edit"></i>editar</a>
-
-                <form action="{% url 'excluir_produto' produto.id %}" method="post">
-                    {% csrf_token %}
-                    <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Fornecedor</th>
+                <th>Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produto %}
+            <tr>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.quantidade }}</td>
+                <td>{{ produto.fornecedor }}</td>
+                <td>
+                    <a href="{% url 'editar_produto' produto.id %}" class="botao"><i class="fas fa-edit"></i> editar</a>
+                    <form action="{% url 'excluir_produto' produto.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
+                    </form>
                 </td>
-                </form>
             </tr>
             {% endfor %}
-
         </tbody>
     </table>
+    <button class="ver-mais-btn botao2">Ver Mais</button>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const verMaisBtn = document.querySelector('.ver-mais-btn');
+        const linhasVisiveis = 3;
+        const tabelaProdutos = document.querySelectorAll('.tabela-custom tbody tr');
+      
+        if (tabelaProdutos.length > linhasVisiveis) {
+            for (let i = linhasVisiveis; i < tabelaProdutos.length; i++) {
+                tabelaProdutos[i].style.display = 'none';
+            }
+      
+            verMaisBtn.addEventListener('click', function() {
+                let allHidden = true;
+                for (let i = linhasVisiveis; i < tabelaProdutos.length; i++) {
+                    if (tabelaProdutos[i].style.display === 'none') {
+                        tabelaProdutos[i].style.display = 'table-row';
+                        allHidden = false;
+                    } else {
+                        tabelaProdutos[i].style.display = 'none';
+                    }
+                }
+                verMaisBtn.textContent = allHidden ? 'Ver Mais' : 'Ver Menos';
+            });
+        } else {
+            verMaisBtn.style.display = 'none';
+        }
+    });
+</script>

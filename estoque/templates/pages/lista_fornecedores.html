@@ -1,7 +1,8 @@
 {% include "partials/head.html" %}
 {% include "partials/header.html" %}
+
 <div class="tabela">
-    <table>
+    <table id="tabela-fornecedor" class="tabela-custom">
         <thead>
             <tr>
                 <th>Fornecedor</th>
@@ -23,34 +24,36 @@
                         {{ fornecedor.nome_fornecedor }}
                     </td>
                     <td>{{ fornecedor.telefone }}</td>
-                    <td><a href="{% url 'editar_fornecedor' fornecedor.id %}" class="botao"><i class="fas fa-edit"></i> editar</a>
-                    <form action="{% url 'excluir_fornecedor' fornecedor.id %}" method="post">
-                        {% csrf_token %}
-                        <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
+                    <td>
+                        <a href="{% url 'editar_fornecedor' fornecedor.id %}" class="botao"><i class="fas fa-edit"></i> editar</a>
+                        <form action="{% url 'excluir_fornecedor' fornecedor.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="botao" type="submit"><i class="fas fa-trash"></i> excluir</button>
+                        </form>
                     </td>
-                    </form>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <button class="ver-mais-btn botao2">Ver Mais</button>
 </div>
 
 <div id="popup" class="popup">
     <div class="popup-content">
         <div class="block">
-            <label id="popupNomeLabel"></label>
+            <label id="popupNomeLabel">Nome:</label>
             <p id="popupNome"></p>
         </div>
         <div class="block">
-            <label id="popupContatoLabel"></label>
+            <label id="popupContatoLabel">Contato:</label>
             <p id="popupContato"></p>
         </div>
         <div class="block">
-            <label id="popupDocumentoLabel"></label>
+            <label id="popupDocumentoLabel">CNPJ/CPF:</label>
             <p id="popupDocumento"></p>
         </div>
         <div class="block">
-            <label id="popupEnderecoLabel"></label>
+            <label id="popupEnderecoLabel">Endereço:</label>
             <p id="popupEndereco"></p>
         </div>
         <button onclick="fecharPopup()">Fechar</button>
@@ -69,23 +72,46 @@
             var cidade = element.getAttribute('data-cidade');
             var estado = element.getAttribute('data-estado');
 
-            var popupNome = document.getElementById('popupNome');
-            var popupContato = document.getElementById('popupContato');
-            var popupDocumento = document.getElementById('popupDocumento');
-            var popupEndereco = document.getElementById('popupEndereco');
+            document.getElementById('popupNome').textContent = nome;
+            document.getElementById('popupContato').textContent = telefone;
+            document.getElementById('popupDocumento').textContent = documento;
+            document.getElementById('popupEndereco').textContent = `${rua}, ${numero} - ${bairro}, ${cidade}, ${estado}`;
 
-            popupNome.textContent = "Fornecedor: " + nome;
-            popupContato.textContent = "Contato: " + telefone;
-            popupDocumento.textContent = "CNPJ/CPF: " + documento;
-            popupEndereco.textContent = "Endereço: " + rua + ", " + numero + " - " + bairro + ", " + cidade + ", " + estado;
-
-            var popup = document.getElementById('popup');
-            popup.style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
         });
     });
 
     function fecharPopup() {
-        var popup = document.getElementById('popup');
-        popup.style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const verMaisBtn = document.querySelector('.ver-mais-btn');
+        const linhasVisiveis = 3;
+        const tabelaFornecedor = document.querySelectorAll('.tabela-custom tbody tr');
+
+        if (tabelaFornecedor.length > linhasVisiveis) {
+            for (let i = linhasVisiveis; i < tabelaFornecedor.length; i++) {
+                tabelaFornecedor[i].style.display = 'none';
+            }
+
+            verMaisBtn.style.display = 'block'; // Ensure the button is displayed
+
+            verMaisBtn.addEventListener('click', function() {
+                let allHidden = true;
+                for (let i = linhasVisiveis; i < tabelaFornecedor.length; i++) {
+                    if (tabelaFornecedor[i].style.display === 'none') {
+                        tabelaFornecedor[i].style.display = 'table-row';
+                        allHidden = false;
+                    } else {
+                        tabelaFornecedor[i].style.display = 'none';
+                    }
+                }
+                verMaisBtn.textContent = allHidden ? 'Ver Mais' : 'Ver Menos';
+            });
+        } else {
+            verMaisBtn.style.display = 'none'; // Hide button if no extra rows
+        }
+    });
 </script>
+

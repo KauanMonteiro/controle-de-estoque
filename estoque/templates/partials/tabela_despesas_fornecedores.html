@@ -1,20 +1,51 @@
 <div class="tabela-despesas-container tabela">
-    <h2>Despesas por Fornecedor no Mês Atual</h2>
-    <table class="tabela-custom ">
-      <thead>
-        <tr>
-          <th>Fornecedor</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for despesa in despesas_por_fornecedor_mes %}
-        <tr>
-          <td>{{ despesa.fornecedor__nome_fornecedor }}</td>
-          <td>{{ despesa.total }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <h2>Despesas por Fornecedor no Mês Atual</h2>
+  <table class="tabela-custom">
+    <thead>
+      <tr>
+        <th>Fornecedor</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for despesa in despesas_por_fornecedor_mes %}
+      <tr>
+        <td>{{ despesa.fornecedor__nome_fornecedor }}</td>
+        <td>{{ despesa.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if despesas_por_fornecedor_mes|length > 3 %}
+  <button class="ver-mais-btn botao2">Ver Mais</button>
+  {% endif %}
+</div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const verMaisBtn = document.querySelector('.ver-mais-btn');
+  const linhasVisiveis = 3;
+  const tabelaDespesas = document.querySelectorAll('.tabela-custom tbody tr');
+
+  if (tabelaDespesas.length > linhasVisiveis) {
+      for (let i = linhasVisiveis; i < tabelaDespesas.length; i++) {
+          tabelaDespesas[i].style.display = 'none';
+      }
+
+      verMaisBtn.addEventListener('click', function() {
+          let allHidden = true;
+          for (let i = linhasVisiveis; i < tabelaDespesas.length; i++) {
+              if (tabelaDespesas[i].style.display === 'none') {
+                  tabelaDespesas[i].style.display = 'table-row';
+                  allHidden = false;
+              } else {
+                  tabelaDespesas[i].style.display = 'none';
+              }
+          }
+          verMaisBtn.textContent = allHidden ? 'Ver Mais' : 'Ver Menos';
+      });
+  } else {
+      verMaisBtn.style.display = 'none';
+  }
+});
+</script>
