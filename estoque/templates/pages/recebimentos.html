@@ -1,3 +1,16 @@
 {% include "partials/head.html" %}
+<header class="main-header-container">
+    <div class="main-header container">
+      <h1>
+        <a class="main-logo" href="{% url 'home' %}">
+          <i class="fas fa-chart-line"></i>
+          <span class="main-logo-text">Recebimentos</span>
+        </a>
+      </h1>
+    </div>
+  </header>
 
+<div class="grafico-container">
+  <h1>Historico de vendas</h1>
 {% include "partials/tabela_recebimentos.html" %}
+</div>

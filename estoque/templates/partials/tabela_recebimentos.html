@@ -1,5 +1,5 @@
 <div class="tabela">
-    <table>
+    <table id="tabela-recebimento">
         <thead>
             <tr>
                 <th>Produto</th>
@@ -19,4 +19,33 @@
             {% endfor %}
         </tbody>
     </table>
+    <button id="ver-mais-btn" class="botao2">Ver Mais</button>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var verMaisBtn = document.getElementById('ver-mais-btn');
+        var tabelaRecebimento = document.getElementById('tabela-recebimento').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        var linhasVisiveis = 3; 
+    
+        for (var i = linhasVisiveis; i < tabelaRecebimento.length; i++) {
+            tabelaRecebimento[i].style.display = 'none';
+        }
+    
+        function alternarLinhas() {
+            for (var i = linhasVisiveis; i < tabelaRecebimento.length; i++) {
+                if (tabelaRecebimento[i].style.display === 'none') {
+                    tabelaRecebimento[i].style.display = 'table-row';
+                } else {
+                    tabelaRecebimento[i].style.display = 'none';
+                }
+            }
+    
+            if (verMaisBtn.textContent === 'Ver Mais') {
+                verMaisBtn.textContent = 'Ver Menos';
+            } else {
+                verMaisBtn.textContent = 'Ver Mais';
+            }
+        }
+    
+        verMaisBtn.addEventListener('click', alternarLinhas);});
+</script>

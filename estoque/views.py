@@ -160,18 +160,22 @@ def excluir_fornecedor(request, id):
         return redirect('home') 
 
 def dashboard(request):
-    pagamento = Pagamento.objects.all()
+    pagamento = Pagamento.objects.all().order_by('-data_vencimento')  # Ordenar pagamentos
+
     mes_atual = datetime.now().month
     ano_atual = datetime.now().year
+
+    # Faturamento por mês
     vendas_por_mes = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
         total_faturamento=Sum(F('produto__preco') * F('quantidade'))
-    ).order_by('mes_venda')
+    ).order_by('-mes_venda')  # Ordena da mais nova para a mais antiga
 
     meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
     faturamento = [venda['total_faturamento'] or 0 for venda in vendas_por_mes]
 
+    # Gráfico de Faturamento
     plt.figure(figsize=(10, 6))
     plt.plot(meses, faturamento, marker='o', linestyle='-')
     plt.title('Faturamento por Mês')
@@ -187,17 +191,19 @@ def dashboard(request):
     image_faturamento_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
-    vendas_por_mes = Vendas.objects.annotate(
+    # Vendas mensais
+    vendas_por_mes_quantidade = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
         total=Sum('quantidade')
-    ).order_by('mes_venda')
+    ).order_by('-mes_venda')  # Ordena da mais nova para a mais antiga
 
-    meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
-    quantidades_mes = [venda['total'] for venda in vendas_por_mes]
+    meses_quantidade = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes_quantidade]
+    quantidades_mes = [venda['total'] or 0 for venda in vendas_por_mes_quantidade]
 
+    # Gráfico de Vendas Mensais
     plt.figure(figsize=(10, 6))
-    plt.plot(meses, quantidades_mes, marker='o', linestyle='-')
+    plt.plot(meses_quantidade, quantidades_mes, marker='o', linestyle='-')
     plt.xlabel('Meses')
     plt.ylabel('Vendas')
     plt.title('Vendas Mensais')
@@ -211,15 +217,17 @@ def dashboard(request):
     image_png2 = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
+    # Produtos mais vendidos
     vendas_por_produto = Vendas.objects.values('produto__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
 
     produtos = [venda['produto__nome'] for venda in vendas_por_produto]
-    quantidades = [venda['total'] for venda in vendas_por_produto]
+    quantidades = [venda['total'] or 0 for venda in vendas_por_produto]
 
+    # Gráfico de Produtos Mais Vendidos
     plt.figure(figsize=(10, 6))
     plt.bar(produtos, quantidades)
     plt.ylabel('Quantidade Vendida')
-    plt.title('Produtos mais vendidos')
+    plt.title('Produtos Mais Vendidos')
     plt.xticks(rotation=45)
     plt.tight_layout()
 
@@ -229,14 +237,16 @@ def dashboard(request):
     image_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
+    # Despesas por fornecedor no mês atual
     despesas_por_fornecedor_mes = Pagamento.objects.filter(data_vencimento__month=mes_atual, data_vencimento__year=ano_atual)\
         .values('fornecedor__nome_fornecedor')\
         .annotate(total=Sum('valor'))\
-        .order_by('-total')[:10]
+        .order_by('-total')[:10]  # Ordena da mais alta para a mais baixa
 
     fornecedor = [despesa['fornecedor__nome_fornecedor'] for despesa in despesas_por_fornecedor_mes]
-    valor = [despesa['total'] for despesa in despesas_por_fornecedor_mes]
+    valor = [despesa['total'] or 0 for despesa in despesas_por_fornecedor_mes]
 
+    # Gráfico de Despesas por Fornecedor
     plt.figure(figsize=(10, 6))
     plt.bar(fornecedor, valor, color='salmon')
     plt.xlabel('Fornecedor')
@@ -251,6 +261,11 @@ def dashboard(request):
     image_despesas_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
+    vendas_mes = Vendas.objects.filter(data_venda__month=mes_atual, data_venda__year=ano_atual)
+
+    for venda_mes in vendas_mes:
+        venda_mes.total = venda_mes.produto.preco * venda_mes.quantidade
+
     return render(request, 'pages/dashboard.html', {
         'grafico_mais_vendidos': image_png,
         'grafico_vendas_mes': image_png2,
@@ -258,13 +273,17 @@ def dashboard(request):
         'image_despesas_png': image_despesas_png,
         'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
         'image_faturamento_png': image_faturamento_png,
+        'vendas_mes': vendas_mes
     })
 
 def area_despesas(request): 
-    pagamento = Pagamento.objects.exclude(status='pago').exclude(status='cancelado')
-    pagamento_pagos_cancelados = Pagamento.objects.exclude(status='pendente')
+    pagamento = Pagamento.objects.exclude(status='pago').exclude(status='cancelado').order_by('-data_vencimento')
+    pagamento_pagos_cancelados = Pagamento.objects.exclude(status='pendente').order_by('-data_vencimento')
 
-    return render(request, 'pages/area_despesas.html', {'pagamento': pagamento, 'pagamento_pagos_cancelados':pagamento_pagos_cancelados})
+    return render(request, 'pages/area_despesas.html', {
+        'pagamento': pagamento,
+        'pagamento_pagos_cancelados': pagamento_pagos_cancelados
+    })
 
 def cadastro_pagamento(request):
     fornecedores = Fornecedor.objects.all()
@@ -369,7 +388,18 @@ def editar_cliente(request,id):
     return render(request,'pages/editar_cliente.html',{'cliente':cliente})
 
 def recebimentos(request):
-    vendas = Vendas.objects.all()
+    vendas = Vendas.objects.all().order_by('-data_venda')
+
     for venda in vendas:
         venda.total = venda.produto.preco * venda.quantidade
-    return render(request, 'pages/recebimentos.html', {'vendas': vendas})
+
+    hoje = datetime.now()
+    mes_atual = hoje.month
+    ano_atual = hoje.year
+
+    vendas_mes = Vendas.objects.filter(data_venda__month=mes_atual, data_venda__year=ano_atual)
+
+    for venda_mes in vendas_mes:
+        venda_mes.total = venda_mes.produto.preco * venda_mes.quantidade
+
+    return render(request, 'pages/recebimentos.html', {'vendas': vendas, 'vendas_mes': vendas_mes})

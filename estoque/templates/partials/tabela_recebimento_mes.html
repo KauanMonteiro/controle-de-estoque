@@ -1,0 +1,24 @@
+<div class="tabela">
+    <h2>Tabela de Vendas Mensais</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Data da Venda</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vendas in vendas_mes %}
+            <tr>
+                <td>{{ vendas.produto.nome }}</td>
+                <td>{{ vendas.quantidade }}</td>
+                <td>{{ vendas.data_venda|date:"d/m/Y" }}</td>
+                <td>{{ vendas.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>

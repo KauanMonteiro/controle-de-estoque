@@ -24,10 +24,9 @@
   </div>
 </div>
 
-<div class="grafico-container">
-  <h2>LUcro</h2>
-  <img src="data:image/png;base64,{{image_faturamento_png}}" alt="Gráfico de Lucro por Mês">
-
+<div class="grafico-tabela-container grafico-container">
+  <img class="grafico-img-alternativo" src="data:image/png;base64,{{image_faturamento_png}}" >
+  {% include "partials/tabela_recebimento_mes.html" %}
 </div>
 
 <div class="grafico-container">
