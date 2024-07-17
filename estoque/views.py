@@ -6,10 +6,18 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from django.db.models.functions import TruncMonth
+from usuario.models import Usuario
 
 
 def home(request):
-    return render(request, "pages/home.html")
+    if 'usuario' not in request.session:
+        return redirect('login')
+
+    usuario_id = request.session['usuario']
+    usuario = Usuario.objects.get(pk=usuario_id)
+
+    return render(request, "pages/home.html", {'usuario': usuario})
+
 
 def cadastrar_produto(request):
     fornecedor = Fornecedor.objects.all()

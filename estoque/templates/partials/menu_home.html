@@ -1,39 +1,74 @@
 <div class="menu-home">
-    <div class="menu-category">
-        <button onclick="toggleCategory('produtos')">Produtos</button>
-        <div class="submenu" id="menu-produtos">
-            <a href="{% url 'cadastrar_produto' %}" class="botao-menu-home"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a>
-            <a href="{% url 'estoque' %}" class="botao-menu-home"><i class="fas fa-box"></i> Verificar Estoque</a>
-        </div>
-    </div>
+        {% if usuario.cargo == 'Admin' %}
+            <div class="menu-category">
+                <button onclick="toggleCategory('produtos')">Produtos</button>
+                <div class="submenu" id="menu-produtos">
+                    <a href="{% url 'cadastrar_produto' %}" class="botao-menu-home"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a>
+                    <a href="{% url 'estoque' %}" class="botao-menu-home"><i class="fas fa-box"></i> Verificar Estoque</a>
+                </div>
+            </div>
     
-    <div class="menu-category">
-        <button onclick="toggleCategory('fornecedores')">Fornecedores</button>
-        <div class="submenu" id="menu-fornecedores">
-            <a href="{% url 'cadastro_fornecedor' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Fornecedor</a>
-            <a href="{% url 'lista_fornecedores' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Fornecedores</a>
-        </div>
-    </div>
+            <div class="menu-category">
+                <button onclick="toggleCategory('fornecedores')">Fornecedores</button>
+                <div class="submenu" id="menu-fornecedores">
+                    <a href="{% url 'cadastro_fornecedor' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Fornecedor</a>
+                    <a href="{% url 'lista_fornecedores' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Fornecedores</a>
+                </div>
+            </div>
 
-    <div class="menu-category">
-        <button onclick="toggleCategory('clientes')">Clientes</button>
-        <div class="submenu" id="menu-clientes">
-            <a href="{% url 'cadastro_cliente' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Cliente</a>
-            <a href="{% url 'lista_clientes' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Clientes</a>
-        </div>
-    </div>
+            <div class="menu-category">
+                <button onclick="toggleCategory('clientes')">Clientes</button>
+                <div class="submenu" id="menu-clientes">
+                    <a href="{% url 'cadastro_cliente' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Cliente</a>
+                    <a href="{% url 'lista_clientes' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Clientes</a>
+                </div>
+            </div>
 
-    <div class="menu-category">
-        <button onclick="toggleCategory('financeiro')">Financeiro</button>
-        <div class="submenu" id="menu-financeiro">
-            <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
-            <a href="{% url "dashboard" %}" class="botao-menu-home"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="{% url "area_despesas" %}" class="botao-menu-home"><i class="fas fa-money-bill-wave"></i> Despesas</a>
-            <a href="{% url "recebimentos" %}" class="botao-menu-home"><i class="fas fa-hand-holding-usd"></i> Recebimento</a>
-        </div>
-    </div>
+            <div class="menu-category">
+                <button onclick="toggleCategory('financeiro')">Financeiro</button>
+                <div class="submenu" id="menu-financeiro">
+                    <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
+                    <a href="{% url "dashboard" %}" class="botao-menu-home"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="{% url "area_despesas" %}" class="botao-menu-home"><i class="fas fa-money-bill-wave"></i> Despesas</a>
+                    <a href="{% url "recebimentos" %}" class="botao-menu-home"><i class="fas fa-hand-holding-usd"></i> Recebimento</a>
+                </div>
+            </div>
+        {% elif usuario.cargo == 'GestorEstoque' %}
+            <div class="menu-category">
+                <button onclick="toggleCategory('produtos')">Produtos</button>
+                <div class="submenu" id="menu-produtos">
+                    <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
+                    <a href="{% url 'cadastrar_produto' %}" class="botao-menu-home"><i class="fas fa-plus-circle"></i> Cadastrar Produto</a>
+                    <a href="{% url 'estoque' %}" class="botao-menu-home"><i class="fas fa-box"></i> Verificar Estoque</a>
+                </div>
+            </div>
+            <div class="menu-category">
+                <button onclick="toggleCategory('clientes')">Clientes</button>
+                <div class="submenu" id="menu-clientes">
+                    <a href="{% url 'cadastro_cliente' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Cliente</a>
+                    <a href="{% url 'lista_clientes' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Clientes</a>
+                </div>
+            </div>
+            <div class="menu-category">
+                <button onclick="toggleCategory('fornecedores')">Fornecedores</button>
+                <div class="submenu" id="menu-fornecedores">
+                    <a href="{% url 'cadastro_fornecedor' %}" class="botao-menu-home"><i class="fas fa-user-plus"></i> Cadastrar Fornecedor</a>
+                    <a href="{% url 'lista_fornecedores' %}" class="botao-menu-home"><i class="fas fa-list"></i> Lista de Fornecedores</a>
+                </div>
+            </div>
+        {% elif usuario.cargo == 'AnalistaFinanceiro' %}
+            <div class="menu-category">
+                <button onclick="toggleCategory('financeiro')">Financeiro</button>
+                <div class="submenu" id="menu-financeiro">
+                    <a href="{% url "vendas" %}" class="botao-menu-home"><i class="fas fa-cash-register"></i> Registrar Vendas</a>
+                    <a href="{% url "dashboard" %}" class="botao-menu-home"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="{% url "area_despesas" %}" class="botao-menu-home"><i class="fas fa-money-bill-wave"></i> Despesas</a>
+                    <a href="{% url "recebimentos" %}" class="botao-menu-home"><i class="fas fa-hand-holding-usd"></i> Recebimento</a>
+                </div>
+            </div>
+        {% endif %}
 </div>
-    
+
 <script>
     var lastOpened = null;
     
@@ -63,5 +98,4 @@
             }
         }
     });
-    </script>
-    
+</script>

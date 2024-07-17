@@ -12,13 +12,13 @@ def login(request):
 def cadastro(request):
     status = request.GET.get('status')
     return render(request, 'cadastro.html', {'status': status, 'CARGO_CHOICES':CARGO_CHOICES})
-
+    
 def valida_cadastro(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
         senha = request.POST.get('senha')
         email = request.POST.get('email')
-
+        cargo = request.POST.get('cargo')  
         usuario = Usuario.objects.filter(email=email)
 
         if len(nome.strip()) == 0 or len(email.strip()) == 0:
@@ -32,7 +32,7 @@ def valida_cadastro(request):
 
         try:
             senha = sha256(senha.encode()).hexdigest()
-            usuario = Usuario(nome=nome, senha=senha, email=email)
+            usuario = Usuario(nome=nome, senha=senha, email=email, cargo=cargo) 
             usuario.save()
 
             return redirect(reverse('cadastro') + '?status=0')
