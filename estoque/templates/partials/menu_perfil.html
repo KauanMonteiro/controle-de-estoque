@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <i class="fa fa-user profile-img"></i>
+            <h2 class="profile-name">{{usuario.nome}}</h2>
+            <p class="profile-email">{{usuario.email}}</p>
+        </div>
+        <nav class="menu">
+            <ul>
+                <li><a href="{% url "home" %}">Início</a></li>
+                <li><a href="#messages">Mensagens</a></li>
+                <li><a href="{% url "sair" %}">Sair</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="content">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+    
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    });
+    
+</script>
