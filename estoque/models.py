@@ -1,4 +1,5 @@
 from django.db import models
+from usuario.models import Usuario
 
 RECEBIMENTO_STATUS = [
     ('pendente', 'Pendente'),
@@ -11,6 +12,13 @@ PAGAMENTO_STATUS = [
     ('pago', 'Pago'),
     ('cancelado', 'Cancelado'),
 ]
+PARA_TODOS = 'todos'
+PARA_DESTINATARIOS = 'destinatarios'
+ESCOLHA_DESTINO = [
+        (PARA_TODOS, 'Para todos os usuários'),
+        (PARA_DESTINATARIOS, 'Para destinatários específicos'),
+    ]
+
 class Fornecedor(models.Model):
     nome_fornecedor = models.CharField(max_length=150)
     telefone = models.CharField(max_length=20,default='')
@@ -62,4 +70,14 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nome
 
+class Mensagem(models.Model):
+    titulo = models.CharField(max_length=100)
+    aviso = models.TextField()
+    data_de_criacao = models.DateTimeField(auto_now_add=True)
+    destinatarios = models.ManyToManyField(Usuario, related_name='mensagens_enviadas', blank=True)
+    remetente = models.ForeignKey(Usuario, related_name='mensagens_recebidas', on_delete=models.CASCADE)
 
+    tipo_destino = models.CharField(max_length=20, choices=ESCOLHA_DESTINO, default=PARA_DESTINATARIOS)
+
+    def __str__(self):
+        return self.titulo

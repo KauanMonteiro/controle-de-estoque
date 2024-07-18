@@ -1,0 +1,27 @@
+{% include "partials/head.html"%}
+
+<form method="post" class="formulario">
+    {% csrf_token %}
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo"><br>
+    
+    <label for="aviso">Aviso:</label><br>
+    <input id="aviso" name="aviso" rows="4" cols="50"></textarea><br>
+    
+    <label for="tipo_destino">Destinatário:</label>
+    <select id="tipo_destino" name="tipo_destino">
+        <option value="destinatarios">Destinatários específicos</option>
+        <option value="todos">Todos os usuários</option>
+    </select>
+
+    <div id="destinatario_select">
+        <label for="destinatario">Escolha o destinatário:</label>
+        <select id="destinatario" name="destinatario">
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <button type="submit">Enviar Mensagem</button>
+</form>

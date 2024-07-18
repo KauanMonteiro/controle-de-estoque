@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS,Cliente
+from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS,Cliente, Mensagem
 from django.db.models import Sum,F  
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -411,3 +411,48 @@ def recebimentos(request):
         venda_mes.total = venda_mes.produto.preco * venda_mes.quantidade
 
     return render(request, 'pages/recebimentos.html', {'vendas': vendas, 'vendas_mes': vendas_mes})
+
+def avisos(request):
+    if 'usuario' not in request.session:
+        return redirect('login')
+
+    usuario_id = request.session['usuario']
+    usuario = Usuario.objects.get(pk=usuario_id)
+    mensagem = Mensagem.objects.filter(destinatarios=usuario)
+
+    return render(request,'pages/avisos.html',{'mensagem':mensagem,'usuario':usuario})
+
+
+def enviar_mensagem(request):
+    if 'usuario' not in request.session:
+        return redirect('login')
+
+    usuario_id = request.session['usuario']
+    remetente = get_object_or_404(Usuario, pk=usuario_id)
+    
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        aviso = request.POST.get('aviso')
+        tipo_destino = request.POST.get('tipo_destino')
+
+        if tipo_destino == 'todos':
+            destinatarios = Usuario.objects.all() 
+        elif tipo_destino == 'destinatarios':
+            destinatario_id = request.POST.get('destinatario')  
+            destinatario = get_object_or_404(Usuario, pk=destinatario_id)
+            destinatarios = [destinatario]
+
+        mensagem = Mensagem.objects.create(
+            titulo=titulo,
+            aviso=aviso,
+            remetente=remetente,
+            tipo_destino=tipo_destino  
+        )
+        mensagem.destinatarios.set(destinatarios)
+        mensagem.save()
+
+        return redirect('home') 
+    
+    usuarios = Usuario.objects.exclude(pk=usuario_id) 
+
+    return render(request, 'pages/enviar_aviso.html', {'usuarios': usuarios, 'remetente': remetente})

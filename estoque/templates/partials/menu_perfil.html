@@ -8,7 +8,10 @@
         <nav class="menu">
             <ul>
                 <li><a href="{% url "home" %}">Início</a></li>
-                <li><a href="#messages">Mensagens</a></li>
+                {% if usuario.cargo == 'Admin' %}
+                <li><a href="{% url "cadastro" %}">Cadastrar Usuario</a></li>
+                {% endif %}
+                <li><a href="{% url "avisos" %}">Avisos</a></li>
                 <li><a href="{% url "sair" %}">Sair</a></li>
             </ul>
         </nav>
