@@ -1,4 +1,6 @@
 {% include "partials/head.html" %}
+
+
 <header class="main-header-container">
     <div class="main-header container">
         <h1>
@@ -13,7 +15,7 @@
         <button class="botao2"><i class="fas fa-plus"></i> Adicionar Pagamento</button>
     </a>
 </div>
-
+    
 <div class="grafico-container">
     <h1>Despesas Pendentes</h1>
     {% include "partials/tabela_despesas.html" %}
@@ -23,3 +25,4 @@
     <h1>Despesas Pagas</h1>
     {% include "partials/tabela_despesas_pagos.html" %}
 </div>
+{% include "partials/menu_perfil.html" %}

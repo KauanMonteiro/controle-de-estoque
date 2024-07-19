@@ -95,7 +95,7 @@
                 tabelaFornecedor[i].style.display = 'none';
             }
 
-            verMaisBtn.style.display = 'block'; // Ensure the button is displayed
+            verMaisBtn.style.display = 'block';
 
             verMaisBtn.addEventListener('click', function() {
                 let allHidden = true;
@@ -110,8 +110,9 @@
                 verMaisBtn.textContent = allHidden ? 'Ver Mais' : 'Ver Menos';
             });
         } else {
-            verMaisBtn.style.display = 'none'; // Hide button if no extra rows
+            verMaisBtn.style.display = 'none'; 
         }
     });
 </script>
 
+{% include "partials/menu_perfil.html" %}

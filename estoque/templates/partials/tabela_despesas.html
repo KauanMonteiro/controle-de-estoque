@@ -1,7 +1,7 @@
 
 <div class="tabela">
-    <div id="tabela-container">
-        <table id="tabela-pagamentos">
+    <div id="tabela-container2">
+        <table id="tabela-pagamentos2">
             <thead>
                 <tr>
                     <th>Fornecedor</th>
@@ -36,19 +36,19 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var verMaisBtn = document.getElementById('ver-mais-btn');
-    var tabelaPagamentos = document.getElementById('tabela-pagamentos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    var tabelaPagamentos2 = document.getElementById('tabela-pagamentos2').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
     var linhasVisiveis = 3; 
 
-    for (var i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
-        tabelaPagamentos[i].style.display = 'none';
+    for (var i = linhasVisiveis; i < tabelaPagamentos2.length; i++) {
+        tabelaPagamentos2[i].style.display = 'none';
     }
 
     function alternarLinhas() {
-        for (var i = linhasVisiveis; i < tabelaPagamentos.length; i++) {
-            if (tabelaPagamentos[i].style.display === 'none') {
-                tabelaPagamentos[i].style.display = 'table-row';
+        for (var i = linhasVisiveis; i < tabelaPagamentos2.length; i++) {
+            if (tabelaPagamentos2[i].style.display === 'none') {
+                tabelaPagamentos2[i].style.display = 'table-row';
             } else {
-                tabelaPagamentos[i].style.display = 'none';
+                tabelaPagamentos2[i].style.display = 'none';
             }
         }
 
