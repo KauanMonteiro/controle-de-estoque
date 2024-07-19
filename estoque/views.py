@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from django.db.models.functions import TruncMonth
-from usuario.models import Usuario
+from usuario.models import Usuario,RegistroAcesso
 
 
 def home(request):
@@ -17,7 +17,6 @@ def home(request):
     usuario = Usuario.objects.get(pk=usuario_id)
 
     return render(request, "pages/home.html", {'usuario': usuario})
-
 
 def cadastrar_produto(request):
     fornecedor = Fornecedor.objects.all()
@@ -169,16 +168,15 @@ def excluir_fornecedor(request, id):
 
 def dashboard(request):
     pagamento = Pagamento.objects.all().order_by('-data_vencimento')  # Ordenar pagamentos
-
+    registros = RegistroAcesso.objects.all()
     mes_atual = datetime.now().month
     ano_atual = datetime.now().year
 
-    # Faturamento por mês
     vendas_por_mes = Vendas.objects.annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
         total_faturamento=Sum(F('produto__preco') * F('quantidade'))
-    ).order_by('-mes_venda')  # Ordena da mais nova para a mais antiga
+    ).order_by('-mes_venda')  
 
     meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
     faturamento = [venda['total_faturamento'] or 0 for venda in vendas_por_mes]
@@ -281,7 +279,8 @@ def dashboard(request):
         'image_despesas_png': image_despesas_png,
         'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
         'image_faturamento_png': image_faturamento_png,
-        'vendas_mes': vendas_mes
+        'vendas_mes': vendas_mes,
+        'registros':registros
     })
 
 def area_despesas(request): 
@@ -421,7 +420,6 @@ def avisos(request):
     mensagem = Mensagem.objects.filter(destinatarios=usuario)
 
     return render(request,'pages/avisos.html',{'mensagem':mensagem,'usuario':usuario})
-
 
 def enviar_mensagem(request):
     if 'usuario' not in request.session:

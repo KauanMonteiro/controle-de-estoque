@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import Usuario, CARGO_CHOICES
+from .models import Usuario, CARGO_CHOICES, RegistroAcesso
 from hashlib import sha256
 
 def login(request):
@@ -42,17 +42,22 @@ def valida_cadastro(request):
 
     return redirect(reverse('cadastro'))
 
+
 def validar_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         senha = request.POST.get('senha')
 
-        senha_hashed = sha256(senha.encode()).hexdigest()
+        usuario = Usuario.objects.filter(email=email).first()
 
-        usuario = Usuario.objects.filter(email=email, senha=senha_hashed).first()
-
-        if usuario:
+        if usuario is not None and usuario.senha == sha256(senha.encode()).hexdigest():
+            # Autenticando usuário
             request.session['usuario'] = usuario.id
+
+            # Registrando entrada automática após login
+            registro = RegistroAcesso(usuario=usuario, tipo_acesso='E')
+            registro.save()
+
             return redirect('/')
         else:
             return redirect(reverse('login') + '?status=1')
@@ -60,5 +65,12 @@ def validar_login(request):
     return redirect(reverse('login'))
 
 def sair(request):
-    request.session.flush()
+    if request.session.get('usuario'):
+        # Registrando saída automática ao fazer logout
+        usuario_id = request.session['usuario']
+        usuario = Usuario.objects.get(id=usuario_id)
+        registro = RegistroAcesso(usuario=usuario, tipo_acesso='S')
+        registro.save()
+        request.session.flush()
+    
     return redirect(reverse('login'))

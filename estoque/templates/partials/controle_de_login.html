@@ -1,0 +1,27 @@
+<div class="tabela">
+<table >
+    <thead>
+        <tr>
+            <th>Usuário</th>
+            <th>Tipo</th>
+            <th>Data/Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for registro in registros %}
+        <tr>
+            <td>{{ registro.usuario.nome }}</td>
+            <td>
+                {% if registro.tipo_acesso == 'E' %}
+                    Entrada
+                {% elif registro.tipo_acesso == 'S' %}
+                    Saída
+                {% endif %}
+            </td>
+            <td>{{ registro.data_hora }}</td>
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
