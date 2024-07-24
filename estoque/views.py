@@ -167,8 +167,8 @@ def excluir_fornecedor(request, id):
         return redirect('home') 
 
 def dashboard(request):
-    pagamento = Pagamento.objects.all().order_by('-data_vencimento')  # Ordenar pagamentos
-    registros = RegistroAcesso.objects.all()
+    pagamento = Pagamento.objects.all().order_by('-data_vencimento') 
+    registros = RegistroAcesso.objects.all().order_by('-data_hora')
     mes_atual = datetime.now().month
     ano_atual = datetime.now().year
 

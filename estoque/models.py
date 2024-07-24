@@ -31,7 +31,6 @@ class Fornecedor(models.Model):
     
     def __str__(self):
         return self.nome_fornecedor
-    
 
 class Produto(models.Model):
     nome = models.CharField(max_length=100)
@@ -42,7 +41,6 @@ class Produto(models.Model):
     def __str__(self) -> str:
         return self.nome
         
-
 class Vendas(models.Model):
     produto= models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.IntegerField()

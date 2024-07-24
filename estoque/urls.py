@@ -23,6 +23,6 @@ urlpatterns = [
     path('excluir_cliente/<int:id>',views.excluir_cliente, name='excluir_cliente'),
     path('recebimentos/',views.recebimentos, name='recebimentos'),
     path('avisos/',views.avisos,name='avisos'),
-    path('enviar_aviso/', views.enviar_mensagem, name='enviar_aviso')
+    path('enviar_aviso/', views.enviar_mensagem, name='enviar_aviso'),
     ]
 
