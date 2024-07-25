@@ -417,7 +417,7 @@ def avisos(request):
 
     usuario_id = request.session['usuario']
     usuario = Usuario.objects.get(pk=usuario_id)
-    mensagem = Mensagem.objects.filter(destinatarios=usuario)
+    mensagem = Mensagem.objects.filter(destinatarios=usuario).order_by('-id')
 
     return render(request,'pages/avisos.html',{'mensagem':mensagem,'usuario':usuario})
 
