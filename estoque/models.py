@@ -40,10 +40,19 @@ class Produto(models.Model):
 
     def __str__(self) -> str:
         return self.nome
-        
+
+class Cliente(models.Model):
+    nome = models.CharField(max_length=120)
+    telefone = models.CharField(max_length=20)
+    documento = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.nome        
+
 class Vendas(models.Model):
     produto= models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.IntegerField()
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
     data_venda = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -60,13 +69,7 @@ class Pagamento(models.Model):
     def __str__(self) -> str:
         return f' Pagamento {self.fornecedor}-{self.data_vencimento}'
     
-class Cliente(models.Model):
-    nome = models.CharField(max_length=120)
-    telefone = models.CharField(max_length=20)
-    documento = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.nome
 
 class Mensagem(models.Model):
     titulo = models.CharField(max_length=100)

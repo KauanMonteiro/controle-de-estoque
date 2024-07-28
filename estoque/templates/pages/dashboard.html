@@ -36,15 +36,20 @@
 </div>
 
 <div class="grafico-tabela-container grafico-container">
-  <img class="grafico-img-alternativo" src="data:image/png;base64,{{ image_despesas_png }}"
+ 
+    <img class="grafico-img-alternativo" src="data:image/png;base64,{{ image_despesas_png }}"
     alt="Gráfico Produtos Mais Vendidos">
-  {% include "partials/tabela_despesas_fornecedores.html" %}
+  {% include "partials/tabela_despesas_fornecedores.html" %} 
+</div>
+<div style="display: grid;
+
+place-items: center; ">
+<img class="grafico-img" src="data:image/png;base64,{{ grafico_clientes }}" alt="Gráfico Produtos Mais Vendidos">
 </div>
 
 <div class="grafico-container">
   <h1>Controle de entrada e saida de usuarios</h1>
   {% include "partials/controle_de_login.html" %}
-
 </div>
 
 {% include "partials/menu_perfil.html" %}

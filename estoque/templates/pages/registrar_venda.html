@@ -13,6 +13,11 @@
     <label for="quantidade">Quantidade:</label>
     <input type="number" name="quantidade" id="quantidade" min="1" required>
     <br>
+
+    <select name="cliente" id="cliente">
+        {% for cliente in cliente %}
+        <option value="{{cliente.id}}">{{cliente.nome}}</option>{% endfor %}
+    </select>
     <button type="submit">Registrar Venda</button>
 </form>
 </div>

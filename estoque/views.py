@@ -130,9 +130,11 @@ def editar_fornecedor(request, id):
     return render(request, 'pages/editar_fornecedor.html', {'fornecedor': fornecedor})
 
 def vendas(request):
+    clientes = Cliente.objects.all()
     if request.method == 'POST':
         produto_vendido_id = request.POST.get('produto')
-        quantidade = int(request.POST.get('quantidade'))  
+        quantidade = int(request.POST.get('quantidade'))
+        cliente = request.POST.get('cliente') 
 
         produto = Produto.objects.get(pk=produto_vendido_id)
 
@@ -142,7 +144,8 @@ def vendas(request):
 
             venda = Vendas.objects.create(
                 produto=produto,
-                quantidade=quantidade
+                quantidade=quantidade,
+                cliente = cliente
             )
                 
             return redirect('estoque')  
@@ -150,7 +153,7 @@ def vendas(request):
             return redirect('home')  
     
     produtos = Produto.objects.all()
-    return render(request, 'pages/registrar_venda.html', {'produtos': produtos})
+    return render(request, 'pages/registrar_venda.html', {'produtos': produtos, 'cliente':clientes})
 
 def excluir_produto(request, id):
     produto = Produto.objects.get(pk=id)
@@ -268,11 +271,33 @@ def dashboard(request):
     buffer.close()
 
     vendas_mes = Vendas.objects.filter(data_venda__month=mes_atual, data_venda__year=ano_atual)
+    vendas_por_cliente = Vendas.objects.values('cliente__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
+
+    clientes = [venda['cliente__nome'] for venda in vendas_por_cliente]
+    quantidades_clientes = [venda['total'] or 0 for venda in vendas_por_cliente]
+
+    vendas = Vendas.objects.values('cliente').annotate(total_vendas=Sum('quantidade'))
+    
+    cliente_nomes = [Cliente.objects.get(id=v['cliente']).nome for v in vendas]
+    quantidades_vendas = [v['total_vendas'] for v in vendas]
+
+    plt.figure(figsize=(8, 8))
+    plt.pie(quantidades_vendas, labels=cliente_nomes, autopct='%1.1f%%', colors=plt.cm.Paired(range(len(cliente_nomes))))
+    plt.title('Participação dos Clientes nas Vendas')
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_clientes_png = base64.b64encode(buffer.getvalue()).decode()
+    buffer.close()
+
 
     for venda_mes in vendas_mes:
         venda_mes.total = venda_mes.produto.preco * venda_mes.quantidade
 
     return render(request, 'pages/dashboard.html', {
+        'cliente':clientes  ,
         'grafico_mais_vendidos': image_png,
         'grafico_vendas_mes': image_png2,
         'pagamento': pagamento,
@@ -280,7 +305,8 @@ def dashboard(request):
         'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
         'image_faturamento_png': image_faturamento_png,
         'vendas_mes': vendas_mes,
-        'registros':registros
+        'registros':registros,
+        'grafico_clientes': image_clientes_png
     })
 
 def area_despesas(request): 
