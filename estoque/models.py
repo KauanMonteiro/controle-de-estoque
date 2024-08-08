@@ -69,8 +69,6 @@ class Pagamento(models.Model):
     def __str__(self) -> str:
         return f' Pagamento {self.fornecedor}-{self.data_vencimento}'
     
-
-
 class Mensagem(models.Model):
     titulo = models.CharField(max_length=100)
     aviso = models.TextField()

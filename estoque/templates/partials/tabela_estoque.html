@@ -5,6 +5,7 @@
                 <th>Produto</th>
                 <th>Quantidade</th>
                 <th>Fornecedor</th>
+                <th>Preço</th>
                 <th>Opções</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@
                 <td>{{ produto.nome }}</td>
                 <td>{{ produto.quantidade }}</td>
                 <td>{{ produto.fornecedor }}</td>
+                <td>{{produto.preco}}</td>
                 <td>
                     <a href="{% url 'editar_produto' produto.id %}" class="botao"><i class="fas fa-edit"></i> editar</a>
                     <form action="{% url 'excluir_produto' produto.id %}" method="post" style="display: inline;">

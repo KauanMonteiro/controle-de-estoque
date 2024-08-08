@@ -27,6 +27,7 @@ def cadastrar_produto(request):
         nome = request.POST.get('nome')
         quantidade = request.POST.get('quantidade')
         fornecedor_id = request.POST.get('fornecedor')  
+        preco = request.POST.get('preco')
 
         if len(nome.strip()) == 0:
             return redirect('cadastrar_produto')
@@ -36,7 +37,8 @@ def cadastrar_produto(request):
             produto = Produto.objects.create(
                 nome=nome,
                 quantidade=quantidade,
-                fornecedor=fornecedor  
+                fornecedor=fornecedor,
+                preco = preco,
             )
             return redirect('estoque')
 
@@ -80,6 +82,7 @@ def editar_produto(request, id):
         nome = request.POST.get('nome')
         quantidade = request.POST.get('quantidade')
         fornecedor_id = request.POST.get('fornecedor')
+        preco= request.POSt.get('preco')
 
         if len(nome.strip()) == 0:
             return redirect('editar_produto', id=id)
@@ -92,6 +95,7 @@ def editar_produto(request, id):
         produto.nome = nome
         produto.quantidade = quantidade
         produto.fornecedor = fornecedor
+        produto.preco = preco
         produto.save()
 
         return redirect('estoque')
