@@ -5,8 +5,8 @@
     {% csrf_token %}
     <label for="produto">Produto:</label>
     <select name="produto" id="produto">
-        {% for produto in produtos %}
-        <option value="{{ produto.pk }}">{{ produto.nome }}</option>
+        {% for produtos in produtos %}
+        <option value="{{ produtos.id }}">{{ produtos.nome }}</option>
         {% endfor %}
     </select>
     <br>
@@ -15,7 +15,7 @@
     <br>
 
     <select name="cliente" id="cliente">
-        {% for cliente in cliente %}
+        {% for cliente in clientes %}
         <option value="{{cliente.id}}">{{cliente.nome}}</option>{% endfor %}
     </select>
     <button type="submit">Registrar Venda</button>

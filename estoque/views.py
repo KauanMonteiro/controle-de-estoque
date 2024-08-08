@@ -1,7 +1,9 @@
 from datetime import datetime
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Fornecedor, Produto,Vendas,Pagamento, PAGAMENTO_STATUS,Cliente, Mensagem
-from django.db.models import Sum,F  
+from django.db.models import Sum,F
+from django.utils.timezone import now  
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -129,31 +131,52 @@ def editar_fornecedor(request, id):
 
     return render(request, 'pages/editar_fornecedor.html', {'fornecedor': fornecedor})
 
+
 def vendas(request):
-    clientes = Cliente.objects.all()
     if request.method == 'POST':
-        produto_vendido_id = request.POST.get('produto')
-        quantidade = int(request.POST.get('quantidade'))
-        cliente = request.POST.get('cliente') 
+        produto_id = request.POST.get('produto')
+        quantidade = request.POST.get('quantidade')
+        cliente_id = request.POST.get('cliente')
+        
+        # Convertendo o ID e a quantidade para inteiros
+        try:
+            produto_id = int(produto_id)
+            quantidade = int(quantidade)
+            cliente_id = int(cliente_id)
+        except ValueError:
+            return HttpResponseBadRequest('IDs e quantidade devem ser números inteiros.')
 
-        produto = Produto.objects.get(pk=produto_vendido_id)
+        # Obtendo as instâncias necessárias
+        try:
+            produto = Produto.objects.get(id=produto_id)
+            cliente = Cliente.objects.get(id=cliente_id)
+        except Produto.DoesNotExist:
+            return HttpResponseBadRequest('Produto não encontrado.')
+        except Cliente.DoesNotExist:
+            return HttpResponseBadRequest('Cliente não encontrado.')
 
-        if produto.quantidade >= quantidade:
-            produto.quantidade -= quantidade
-            produto.save()
+        # Verificando a quantidade disponível
+        if produto.quantidade < quantidade:
+            return HttpResponseBadRequest('Quantidade solicitada excede a disponibilidade do produto.')
 
-            venda = Vendas.objects.create(
-                produto=produto,
-                quantidade=quantidade,
-                cliente = cliente
-            )
-                
-            return redirect('estoque')  
-        else:
-            return redirect('home')  
+        # Atualizando a quantidade do produto
+        produto.quantidade -= quantidade
+        produto.save()
+
+        # Criando a venda
+        venda = Vendas.objects.create(
+            produto=produto,
+            quantidade=quantidade,
+            cliente=cliente
+        )
+        
+        # Resposta de sucesso
+        return HttpResponse('Venda registrada com sucesso!')
     
+    # Lógica para métodos GET ou outras ações
+    clientes = Cliente.objects.all()
     produtos = Produto.objects.all()
-    return render(request, 'pages/registrar_venda.html', {'produtos': produtos, 'cliente':clientes})
+    return render(request, 'pages/registrar_venda.html', {'clientes': clientes, 'produtos': produtos})
 
 def excluir_produto(request, id):
     produto = Produto.objects.get(pk=id)
@@ -172,14 +195,22 @@ def excluir_fornecedor(request, id):
 def dashboard(request):
     pagamento = Pagamento.objects.all().order_by('-data_vencimento') 
     registros = RegistroAcesso.objects.all().order_by('-data_hora')
-    mes_atual = datetime.now().month
-    ano_atual = datetime.now().year
+    mes_atual = now().month
+    ano_atual = now().year
 
-    vendas_por_mes = Vendas.objects.annotate(
+    # Calcula o mês e o ano do mês anterior
+    mes_anterior = mes_atual - 1 if mes_atual > 1 else 12
+    ano_anterior = ano_atual if mes_atual > 1 else ano_atual - 1
+
+    # Faturamento por Mês
+    vendas_por_mes = Vendas.objects.filter(
+        data_venda__month__in=[mes_atual, mes_anterior],
+        data_venda__year__in=[ano_atual, ano_anterior]
+    ).annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
         total_faturamento=Sum(F('produto__preco') * F('quantidade'))
-    ).order_by('-mes_venda')  
+    ).order_by('mes_venda')  
 
     meses = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes]
     faturamento = [venda['total_faturamento'] or 0 for venda in vendas_por_mes]
@@ -201,11 +232,14 @@ def dashboard(request):
     buffer.close()
 
     # Vendas mensais
-    vendas_por_mes_quantidade = Vendas.objects.annotate(
+    vendas_por_mes_quantidade = Vendas.objects.filter(
+        data_venda__month__in=[mes_atual, mes_anterior],
+        data_venda__year__in=[ano_atual, ano_anterior]
+    ).annotate(
         mes_venda=TruncMonth('data_venda')
     ).values('mes_venda').annotate(
         total=Sum('quantidade')
-    ).order_by('-mes_venda')  # Ordena da mais nova para a mais antiga
+    ).order_by('mes_venda')
 
     meses_quantidade = [venda['mes_venda'].strftime('%b %Y') for venda in vendas_por_mes_quantidade]
     quantidades_mes = [venda['total'] or 0 for venda in vendas_por_mes_quantidade]
@@ -247,10 +281,12 @@ def dashboard(request):
     buffer.close()
 
     # Despesas por fornecedor no mês atual
-    despesas_por_fornecedor_mes = Pagamento.objects.filter(data_vencimento__month=mes_atual, data_vencimento__year=ano_atual)\
-        .values('fornecedor__nome_fornecedor')\
-        .annotate(total=Sum('valor'))\
-        .order_by('-total')[:10]  # Ordena da mais alta para a mais baixa
+    despesas_por_fornecedor_mes = Pagamento.objects.filter(
+        data_vencimento__month=mes_atual, 
+        data_vencimento__year=ano_atual
+    ).values('fornecedor__nome_fornecedor').annotate(
+        total=Sum('valor')
+    ).order_by('-total')[:10]
 
     fornecedor = [despesa['fornecedor__nome_fornecedor'] for despesa in despesas_por_fornecedor_mes]
     valor = [despesa['total'] or 0 for despesa in despesas_por_fornecedor_mes]
@@ -270,13 +306,20 @@ def dashboard(request):
     image_despesas_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
-    vendas_mes = Vendas.objects.filter(data_venda__month=mes_atual, data_venda__year=ano_atual)
-    vendas_por_cliente = Vendas.objects.values('cliente__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
+    # Vendas por Cliente no mês atual
+    vendas_mes = Vendas.objects.filter(
+        data_venda__month=mes_atual,
+        data_venda__year=ano_atual
+    ).annotate(
+        total=F('quantidade') * F('produto__preco')  # Adiciona o valor total da venda
+    )
+    vendas_por_cliente = vendas_mes.values('cliente__nome').annotate(total=Sum('quantidade')).order_by('-total')[:10]
 
     clientes = [venda['cliente__nome'] for venda in vendas_por_cliente]
     quantidades_clientes = [venda['total'] or 0 for venda in vendas_por_cliente]
 
-    vendas = Vendas.objects.values('cliente').annotate(total_vendas=Sum('quantidade'))
+    # Gráfico de Participação dos Clientes
+    vendas = vendas_mes.values('cliente').annotate(total_vendas=Sum('quantidade'))
     
     cliente_nomes = [Cliente.objects.get(id=v['cliente']).nome for v in vendas]
     quantidades_vendas = [v['total_vendas'] for v in vendas]
@@ -292,12 +335,8 @@ def dashboard(request):
     image_clientes_png = base64.b64encode(buffer.getvalue()).decode()
     buffer.close()
 
-
-    for venda_mes in vendas_mes:
-        venda_mes.total = venda_mes.produto.preco * venda_mes.quantidade
-
     return render(request, 'pages/dashboard.html', {
-        'cliente':clientes  ,
+        'cliente': clientes,
         'grafico_mais_vendidos': image_png,
         'grafico_vendas_mes': image_png2,
         'pagamento': pagamento,
@@ -305,10 +344,9 @@ def dashboard(request):
         'despesas_por_fornecedor_mes': despesas_por_fornecedor_mes,
         'image_faturamento_png': image_faturamento_png,
         'vendas_mes': vendas_mes,
-        'registros':registros,
-        'grafico_clientes': image_clientes_png
+        'registros': registros,
+        'grafico_clientes': image_clientes_png,
     })
-
 def area_despesas(request): 
     pagamento = Pagamento.objects.exclude(status='pago').exclude(status='cancelado').order_by('-data_vencimento')
     pagamento_pagos_cancelados = Pagamento.objects.exclude(status='pendente').order_by('-data_vencimento')
