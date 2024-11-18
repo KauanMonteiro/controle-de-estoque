@@ -521,3 +521,4 @@ def enviar_mensagem(request):
     usuarios = Usuario.objects.exclude(pk=usuario_id) 
 
     return render(request, 'pages/enviar_aviso.html', {'usuarios': usuarios, 'remetente': remetente})
+
