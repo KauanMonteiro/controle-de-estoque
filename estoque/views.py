@@ -30,7 +30,7 @@ def cadastrar_produto(request):
         preco = request.POST.get('preco')
 
         if len(nome.strip()) == 0:
-            return redirect('cadastrar_produto')
+            return redirect('home')
         
         else:
             fornecedor = Fornecedor.objects.get(pk=fornecedor_id) 
@@ -135,7 +135,6 @@ def editar_fornecedor(request, id):
 
     return render(request, 'pages/editar_fornecedor.html', {'fornecedor': fornecedor})
 
-
 def vendas(request):
     if request.method == 'POST':
         produto_id = request.POST.get('produto')
@@ -175,7 +174,7 @@ def vendas(request):
         )
         
         # Resposta de sucesso
-        return HttpResponse('Venda registrada com sucesso!')
+        return redirect('dashboard')
     
     # Lógica para métodos GET ou outras ações
     clientes = Cliente.objects.all()
