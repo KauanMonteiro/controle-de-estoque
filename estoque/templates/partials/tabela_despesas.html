@@ -20,7 +20,10 @@
                     <td>{{ pagamento.valor }}</td>
                     <td>{{ pagamento.data_vencimento }}</td>
                     <td>{{ pagamento.status }}</td>
-                    <td> <a href="{% url "editar_pagamento" pagamento.id %}" class="botao"><i class="fas fa-edit"></i>editar</a>
+                    
+                    <td> 
+                        <td> <a href="{% url 'marcar_pago' pagamento.id %}" class="botao"><i class="fas fa-check"></i>pago</a>
+                        <a href="{% url "editar_pagamento" pagamento.id %}" class="botao"><i class="fas fa-edit"></i>editar</a>
                         <form action="{% url "excluir_despesas" pagamento.id %}" method="POST">
                         {% csrf_token %}
                         <button class="botao"><i class="fas fa-trash"></i>excluir</button>

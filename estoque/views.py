@@ -381,6 +381,13 @@ def cadastro_pagamento(request):
 
     return render(request, 'pages/cadastro_pagamento.html', {'fornecedores': fornecedores, 'PAGAMENTO_STATUS': PAGAMENTO_STATUS})
 
+def marcar_pago(request, id):
+    pagamento = get_object_or_404(Pagamento, pk=id)
+
+    pagamento.status = 'pago'
+    pagamento.save()
+    return redirect('area_despesas')
+
 def editar_pagamento(request, id):
     pagamento = get_object_or_404(Pagamento, pk=id)
     fornecedores = Fornecedor.objects.all()

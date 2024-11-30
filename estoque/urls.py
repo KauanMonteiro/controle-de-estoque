@@ -24,5 +24,6 @@ urlpatterns = [
     path('recebimentos/',views.recebimentos, name='recebimentos'),
     path('avisos/',views.avisos,name='avisos'),
     path('enviar_aviso/', views.enviar_mensagem, name='enviar_aviso'),
+    path('marcar_pago/<int:id>/',views.marcar_pago,name='marcar_pago')
     ]
 
