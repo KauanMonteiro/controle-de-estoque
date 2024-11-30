@@ -82,7 +82,7 @@ def editar_produto(request, id):
         nome = request.POST.get('nome')
         quantidade = request.POST.get('quantidade')
         fornecedor_id = request.POST.get('fornecedor')
-        preco= request.POSt.get('preco')
+        preco= request.POST.get('preco')
 
         if len(nome.strip()) == 0:
             return redirect('editar_produto', id=id)
