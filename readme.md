@@ -2,8 +2,6 @@
 
 **Gerencie seu estoque, vendas, clientes e muito mais com eficiência e clareza.**
 
-![Dashboard]()
-
 O **sistema** é uma solução web abrangente desenvolvida em Django para simplificar a gestão de negócios. Ideal para PMEs, oferece controle de estoque, acompanhamento financeiro e ferramentas de comunicação interna em uma interface intuitiva.
 
 ## ✨ Funcionalidades Principais
